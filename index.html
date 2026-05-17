@@ -31,7 +31,7 @@
     </script>
     <style type="text/tailwindcss">
         .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -299,7 +299,7 @@
                     低碳改造，讓校園 <span class="text-emerald-400 inline-block">碳吉</span>
                 </h1>
                 <p class="text-lg md:text-2xl mb-10 opacity-90 font-light leading-relaxed max-w-3xl mx-auto">
-                    協助學校申請 115 年度新北市低碳校園標章認證
+                    協助申請 115 年度新北市低碳校園標章認證
                 </p>
             </div>
         </div>
@@ -711,7 +711,7 @@
                             { id: "3_1_a", label: "學校實施禁用免洗餐具並具有具體推廣成果", score: 2 },
                             { id: "3_1_b", label: "學校推動不帶零食、飲料、廚餘之三不政策達 1 年以上", score: 2 }
                         ],
-                        requirements: ["校園實施宣導公文或禁用免洗餐具之配套執行規範", "三不政策（無垃圾零食包裝、減少廚餘）推行方案與成果照"]
+                        requirements: ["校園實施宣導公文 or 禁用免洗餐具之配套執行規範", "三不政策（無垃圾零食包裝、減少廚餘）推行方案與成果照"]
                     },
                     {
                         id: "3-2",
@@ -1480,10 +1480,8 @@
                             <input type="checkbox" id="cb_${item.id.replace(/-/g, '_')}" value="${item.score}" class="sr-only-input" onchange="calculateScore()">
                             <div class="card-content">
                                 <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
-                                <div class="flex-1 min-w-0 flex items-start justify-between">
-                                    <span class="text-label">${item.desc}</span>
-                                    <span class="score-tag">${item.score}分</span>
-                                </div>
+                                <span class="text-label">${item.desc}</span>
+                                <span class="score-tag">${item.score}分</span>
                             </div>
                         </label>
                         `;
@@ -1494,10 +1492,8 @@
                                 <input type="radio" name="${item.groupName}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
                                 <div class="card-content">
                                     <div class="radio-box"><div class="radio-dot"></div></div>
-                                    <div class="flex-1 min-w-0 flex items-start justify-between">
-                                        <span class="text-label">${opt.label}</span>
-                                        <span class="score-tag">${opt.score}分</span>
-                                    </div>
+                                    <span class="text-label">${opt.label}</span>
+                                    <span class="score-tag">${opt.score}分</span>
                                 </div>
                             </label>
                             `;
@@ -1510,10 +1506,8 @@
                                 <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" ${bonusAttr} class="sr-only-input" onchange="calculateScore()">
                                 <div class="card-content">
                                     <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
-                                    <div class="flex-1 min-w-0 flex items-start justify-between">
-                                        <span class="text-label">${opt.label}</span>
-                                        <span class="score-tag">${opt.score}分${opt.isBonus ? " (加分)" : ""}</span>
-                                    </div>
+                                    <span class="text-label">${opt.label}</span>
+                                    <span class="score-tag">${opt.score}分${opt.isBonus ? " (加分)" : ""}</span>
                                 </div>
                             </label>
                             `;
@@ -1526,10 +1520,8 @@
                                 <input type="radio" name="${item.groupName}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
                                 <div class="card-content">
                                     <div class="radio-box"><div class="radio-dot"></div></div>
-                                    <div class="flex-grow flex items-start justify-between min-w-0 flex-1">
-                                        <span class="text-label">${opt.label}</span>
-                                        <span class="score-tag">${opt.score}分</span>
-                                    </div>
+                                    <span class="text-label">${opt.label}</span>
+                                    <span class="score-tag">${opt.score}分</span>
                                 </div>
                             </label>
                             `;
@@ -1541,10 +1533,8 @@
                                 <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" data-is-bonus="true" class="sr-only-input" onchange="calculateScore()">
                                 <div class="card-content">
                                     <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
-                                    <div class="flex-grow flex items-start justify-between min-w-0 flex-1">
-                                        <span class="text-label">${opt.label}</span>
-                                        <span class="score-tag">${opt.score}分 (加分)</span>
-                                    </div>
+                                    <span class="text-label">${opt.label}</span>
+                                    <span class="score-tag">${opt.score}分 (加分)</span>
                                 </div>
                             </label>
                             `;
@@ -1558,10 +1548,8 @@
                                 <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" class="sr-only-input" onchange="calculateScore()">
                                 <div class="card-content">
                                     <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
-                                    <div class="flex-1 min-w-0 flex items-start justify-between">
-                                        <span class="text-label">${opt.label}</span>
-                                        <span class="score-tag">${opt.score}分</span>
-                                    </div>
+                                    <span class="text-label">${opt.label}</span>
+                                    <span class="score-tag">${opt.score}分</span>
                                 </div>
                             </label>
                             `;
@@ -1573,10 +1561,8 @@
                                 <input type="radio" name="${item.radioGroup}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
                                 <div class="card-content">
                                     <div class="radio-box"><div class="radio-dot"></div></div>
-                                    <div class="flex-1 min-w-0 flex items-start justify-between">
-                                        <span class="text-label">${opt.label}</span>
-                                        <span class="score-tag">${opt.score}分</span>
-                                    </div>
+                                    <span class="text-label">${opt.label}</span>
+                                    <span class="score-tag">${opt.score}分</span>
                                 </div>
                             </label>
                             `;
@@ -1590,10 +1576,8 @@
                                     <input type="radio" name="${item.radioGroup2}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
                                     <div class="card-content">
                                         <div class="radio-box"><div class="radio-dot"></div></div>
-                                        <div class="flex-1 min-w-0 flex items-start justify-between">
-                                            <span class="text-label">${opt.label}</span>
-                                            <span class="score-tag">${opt.score}分</span>
-                                        </div>
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分</span>
                                     </div>
                                 </label>
                                 `;
@@ -1609,10 +1593,8 @@
                                 <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" class="sr-only-input" onchange="calculateScore()">
                                 <div class="card-content">
                                     <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
-                                    <div class="flex-1 min-w-0 flex items-start justify-between">
-                                        <span class="text-label">${opt.label}</span>
-                                        <span class="score-tag">${opt.score}分</span>
-                                    </div>
+                                    <span class="text-label">${opt.label}</span>
+                                    <span class="score-tag">${opt.score}分</span>
                                 </div>
                             </label>
                             `;
@@ -1683,7 +1665,7 @@
                             <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-sm font-bold text-sm ${bgTitle}">${catIndex + 1}</div>
                             <h3 class="text-lg font-bold text-slate-700">${cat.title}</h3>
                         </div>
-                        <svg class="w-5 h-5 text-slate-400 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        <svg class="w-5 h-5 text-slate-400 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     </summary>
                     <div class="p-6 pt-6 space-y-6">
                 `;
