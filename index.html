@@ -1,1 +1,2103 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>碳吉 TanJi - 新北市低碳校園標章認證輔助系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght=300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                    },
+                    colors: {
+                        emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b' },
+                        amber: { 50: '#fffbeb', 100: '#fef3c7', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309', 900: '#78350f' },
+                        sky: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1', 900: '#0c4a6e' },
+                        violet: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 700: '#6d28d9', 900: '#4c1d95' },
+                        orange: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 700: '#c2410c', 900: '#7c2d12' },
+                        rose: { 50: '#fff1f2', 100: '#ffe4e6', 500: '#f43f5e', 700: '#be123c', 900: '#881337' },
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .sr-only-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none !important;
+          margin: 0 !important;
+        }
+        input[type=number] {
+          -moz-appearance: textfield !important;
+        }
+        .checkbox-box, .radio-box {
+            background-color: white;
+            border: 2px solid #cbd5e1;
+        }
+        .checkbox-icon, .radio-dot {
+            display: none;
+        }
+        input[type="checkbox"]:checked + .card-content .checkbox-box { 
+            background-color: currentColor; 
+            border-color: currentColor; 
+        }
+        input[type="checkbox"]:checked + .card-content .checkbox-icon { 
+            display: block !important; 
+            stroke: white !important; 
+            stroke-width: 3 !important; 
+        }
+        input[type="radio"]:checked + .card-content .checkbox-box,
+        input[type="radio"]:checked + .card-content .radio-box { 
+            background-color: white; 
+            border-color: currentColor;    
+        }
+        input[type="radio"]:checked + .card-content .radio-dot { 
+            display: block !important; 
+            background-color: currentColor;
+        }
+        
+        .group-emerald { color: #10b981; } 
+        .group-emerald:hover { background-color: #ecfdf5; border-color: #6ee7b7; }
+        .group-emerald:has(input:checked) { background-color: #ecfdf5; border-color: #10b981; }
+        .group-emerald input:checked + .card-content .text-label { color: #064e3b; font-weight: 700; }
+        .group-emerald input:checked + .card-content .score-tag { background-color: #d1fae5; color: #064e3b; }
+        
+        .group-amber { color: #f59e0b; }
+        .group-amber:hover { background-color: #fffbeb; border-color: #fcd34d; }
+        .group-amber:has(input:checked) { background-color: #fffbeb; border-color: #f59e0b; }
+        .group-amber input:checked + .card-content .text-label { color: #78350f; font-weight: 700; }
+        .group-amber input:checked + .card-content .score-tag { background-color: #fef3c7; color: #78350f; }
+        
+        .group-sky { color: #0ea5e9; }
+        .group-sky:hover { background-color: #f0f9ff; border-color: #7dd3fc; }
+        .group-sky:has(input:checked) { background-color: #f0f9ff; border-color: #0ea5e9; }
+        .group-sky input:checked + .card-content .text-label { color: #0c4a6e; font-weight: 700; }
+        .group-sky input:checked + .card-content .score-tag { background-color: #e0f2fe; color: #0c4a6e; }
+        
+        .group-violet { color: #8b5cf6; }
+        .group-violet:hover { background-color: #f5f3ff; border-color: #a78bfa; }
+        .group-violet:has(input:checked) { background-color: #f5f3ff; border-color: #8b5cf6; }
+        .group-violet input:checked + .card-content .text-label { color: #4c1d95; font-weight: 700; }
+        .group-violet input:checked + .card-content .score-tag { background-color: #ede9fe; color: #4c1d95; }
+        
+        .group-orange { color: #f97316; }
+        .group-orange:hover { background-color: #fff7ed; border-color: #fdba74; }
+        .group-orange:has(input:checked) { background-color: #fff7ed; border-color: #f97316; }
+        .group-orange input:checked + .card-content .text-label { color: #7c2d12; font-weight: 700; }
+        .group-orange input:checked + .card-content .score-tag { background-color: #ffedd5; color: #7c2d12; }
+        
+        .group-rose { color: #f43f5e; }
+        .group-rose:hover { background-color: #fff1f2; border-color: #fda4af; }
+        .group-rose:has(input:checked) { background-color: #fff1f2; border-color: #f43f5e; }
+        .group-rose input:checked + .card-content .text-label { color: #881337; font-weight: 700; }
+        .group-rose input:checked + .card-content .score-tag { background-color: #ffe4e6; color: #881337; }
 
+        .group-slate { color: #64748b; }
+        .group-slate:hover { background-color: #f1f5f9; border-color: #cbd5e1; }
+        .group-slate:has(input:checked) { background-color: #f1f5f9; border-color: #64748b; }
+        .group-slate input:checked + .card-content .text-label { color: #0f172a; font-weight: 700; }
+        .group-slate input:checked + .card-content .score-tag { background-color: #e2e8f0; color: #0f172a; }
+        
+        .option-card {
+            @apply relative flex items-start p-3 rounded-xl border border-slate-200 cursor-pointer transition-all duration-150 bg-white select-none h-full min-w-0 w-full;
+        }
+        .card-content {
+            @apply flex items-start w-full min-w-0;
+        }
+        .checkbox-box, .radio-box {
+            @apply w-5 h-5 flex-shrink-0 mr-3 flex items-center justify-center rounded mt-0.5;
+        }
+        .radio-box { @apply rounded-full; }
+        .checkbox-icon { @apply w-3.5 h-3.5; }
+        .radio-dot { @apply w-2.5 h-2.5 rounded-full; }
+        .text-label {
+            @apply text-slate-600 text-sm md:text-base leading-snug transition-colors flex-1 min-w-0 break-words pr-1 text-left;
+        }
+        .score-tag {
+            @apply ml-2 text-xs font-bold px-2 py-1 rounded bg-slate-100 text-slate-500 whitespace-nowrap shrink-0 mt-0.5;
+        }
+        .helper-btn {
+            @apply fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full shadow-xl flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform z-50 hover:shadow-2xl border-2 border-white/20;
+        }
+        .helper-tooltip {
+            @apply absolute bottom-16 right-0 w-64 bg-white p-4 rounded-xl shadow-xl border border-gray-100 opacity-0 transform translate-y-2 pointer-events-none transition-all duration-300;
+        }
+        .helper-btn:hover .helper-tooltip, .helper-btn:focus .helper-tooltip {
+            @apply opacity-100 translate-y-0 pointer-events-auto;
+        }
+        .toast {
+            @apply fixed top-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg z-[100] transition-all duration-300 opacity-0 -translate-y-full flex items-center;
+        }
+        .toast.show {
+            @apply opacity-100 translate-y-0;
+        }
+        details summary::-webkit-details-marker { display: none; }
+        details summary { list-style: none; }
+        details .triangle-icon { @apply transition-transform duration-200 transform; }
+        details[open] .triangle-icon { @apply rotate-180; }
+        
+        body.compare-mode #comparison-sidebar {
+            transform: translateX(0);
+        }
+        body.compare-mode #main-content {
+            margin-left: 50%;
+            width: 50%;
+        }
+        #comparison-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        #main-content {
+            transition: all 0.3s ease-in-out;
+        }
+        .image-viewer-container {
+            cursor: grab;
+        }
+        .image-viewer-container:active {
+            cursor: grabbing;
+        }
+        .drop-zone { transition: all 0.2s; border: 2px dashed #cbd5e1; }
+        .drop-zone.drag-over { border-color: #10b981; background-color: #ecfdf5; transform: scale(1.02); }
+        .draggable-source { cursor: grab; }
+        .draggable-source:active { cursor: grabbing; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700 selection:bg-emerald-100 selection:text-emerald-800 relative overflow-x-hidden">
+
+    <div id="comparison-sidebar" class="fixed top-16 left-0 w-1/2 h-[calc(100vh-4rem)] bg-slate-900 z-40 border-r border-slate-700 flex flex-col transform -translate-x-full shadow-2xl">
+        <div class="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center text-white">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <h3 class="font-bold text-lg">佐證素材與照片庫</h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-lg text-sm font-medium transition flex items-center shadow-lg border border-white/10">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    匯入照片
+                    <input type="file" id="paperUpload" multiple accept="image/*" class="hidden" onchange="handleImageUpload(this)">
+                </label>
+                <button onclick="toggleCompareMode()" class="text-slate-400 hover:text-white p-1">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex-grow flex flex-col p-4 space-y-4 overflow-y-auto">
+            <div id="imageViewer" class="relative bg-slate-800 rounded-xl overflow-hidden border border-slate-700 min-h-[300px] flex items-center justify-center image-viewer-container" onmousedown="startDrag(event)" onmousemove="dragImage(event)" onmouseup="endDrag()" onmouseleave="endDrag()" onwheel="zoomImage(event)">
+                <div id="emptyState" class="text-center text-slate-500 pointer-events-none">
+                    <p class="text-lg font-medium">預覽區域</p>
+                    <p class="text-sm opacity-70">點擊下方列表切換</p>
+                </div>
+                <img id="currentImage" class="max-w-none origin-center hidden" style="transform: translate(0px, 0px) scale(1);">
+            </div>
+
+            <div class="flex justify-between items-center text-white bg-slate-800 p-2 rounded-lg border border-slate-700">
+                <div class="flex gap-2">
+                    <button onclick="adjustZoom(-0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
+                    <span id="zoomDisplay" class="text-sm w-12 text-center pt-1">100%</span>
+                    <button onclick="adjustZoom(0.1)" class="p-1 bg-slate-700 rounded hover:bg-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg></button>
+                </div>
+                <div class="text-xs text-slate-400">滾輪縮放 / 拖曳移動</div>
+            </div>
+
+            <div class="text-white text-sm font-bold border-b border-slate-700 pb-2">照片列表 (可拖曳至右側表格)</div>
+            <div id="sidebarGallery" class="space-y-4 pb-12">
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <svg class="w-5 h-5 mr-2 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toastMsg">已成功匯入紀錄</span>
+    </div>
+
+    <div id="resetModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[70] backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-2xl transform transition-all scale-100">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">確定要清空嗎？</h3>
+                <p class="text-slate-500 text-sm mb-6">這將會移除目前所有已填寫的資料與暫存紀錄，無法復原。</p>
+                <div class="flex gap-3">
+                    <button onclick="document.getElementById('resetModal').classList.add('hidden')" class="flex-1 px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">取消</button>
+                    <button onclick="confirmReset()" class="flex-1 px-4 py-2 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition">確定清空</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm fixed w-full z-50 border-b border-slate-100 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-400 to-green-600 rounded-xl shadow-lg text-white">
+                        <svg class="w-6 h-6 drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/></svg>
+                    </div>
+                    <span class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-teal-600 tracking-wide drop-shadow-sm">碳吉 TanJi</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <button onclick="toggleCompareMode()" class="flex items-center px-5 py-2.5 bg-emerald-700 text-white rounded-xl hover:bg-emerald-800 transition-all duration-200 font-bold shadow-lg border-2 border-emerald-600">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                        素材工作台
+                    </button>
+                    <a href="#assessment" class="text-slate-500 hover:text-emerald-600 font-medium transition text-base">校園指標自評</a>
+                    <a href="#documents" class="text-slate-500 hover:text-emerald-600 font-medium transition text-base">佐證編輯器</a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-slate-600 hover:text-emerald-600 focus:outline-none p-2" id="mobile-menu-button">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="hamburger-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg class="w-8 h-8 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="close-icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-slate-100 flex flex-col p-4 space-y-3 shadow-xl absolute w-full left-0 z-50">
+            <button onclick="toggleCompareMode(); toggleMobileMenu();" class="flex items-center justify-center w-full px-5 py-3 bg-emerald-700 text-white rounded-xl font-bold shadow-lg">
+                素材工作台
+            </button>
+            <a href="#assessment" onclick="toggleMobileMenu()" class="block text-center text-slate-600 py-3 font-medium hover:text-emerald-600 border-b border-slate-50">校園指標自評</a>
+            <a href="#documents" onclick="toggleMobileMenu()" class="block text-center text-slate-600 py-3 font-medium hover:text-emerald-600 border-b border-slate-50">佐證編輯器</a>
+        </div>
+    </nav>
+
+    <main id="main-content" class="w-full transition-all duration-300">
+        <div class="hero-bg h-[55vh] flex items-center justify-center text-center px-4 pt-16 relative overflow-hidden">
+            <div class="text-white max-w-4xl z-10">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight drop-shadow-lg leading-tight">
+                    低碳改造，讓校園 <span class="text-emerald-400 inline-block">碳吉</span>
+                </h1>
+                <p class="text-lg md:text-2xl mb-10 opacity-90 font-light leading-relaxed max-w-3xl mx-auto">
+                    協助學校申請 115 年度新北市低碳校園標章認證
+                </p>
+            </div>
+        </div>
+
+        <div id="assessment" class="py-20 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-8">
+                    <span class="text-emerald-600 font-bold tracking-widest uppercase text-xs bg-emerald-100 px-3 py-1 rounded-full mb-3 inline-block">STEP 1</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-slate-800">115年 學校基本資料與自評</h2>
+                    <p class="mt-4 text-slate-500 max-w-2xl mx-auto text-lg">依據最新一屆低碳校園評分規定，自動判算人均水電量、綠覆率與落點級距。</p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button onclick="saveData()" class="flex items-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-emerald-600 transition shadow-sm font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                        儲存進度 (下載)
+                    </button>
+                    <button onclick="document.getElementById('importFile').click()" class="flex items-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-emerald-600 transition shadow-sm font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                        匯入紀錄
+                    </button>
+                    <input type="file" id="importFile" class="hidden" accept=".json" onchange="loadData(this)">
+                    
+                    <button onclick="triggerReset()" class="flex items-center px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition shadow-sm font-medium">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        清空重填
+                    </button>
+                </div>
+
+                <form id="calcForm" class="space-y-12">
+                    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                        <div class="bg-slate-50 px-8 py-4 border-b border-slate-200 flex items-center">
+                            <svg class="w-5 h-5 text-slate-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            <h3 class="text-lg font-bold text-slate-700">學校基礎屬性與數據</h3>
+                        </div>
+                        <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">學校層級 (基準判定)</label>
+                                <select id="schoolType" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-base" onchange="calculateScore()">
+                                    <option value="elementary">國小 (用水基準: 28L/人日)</option>
+                                    <option value="junior">國中 (用水基準: 25L/人日)</option>
+                                    <option value="high">高中職 (用水基準: 32L/人日)</option>
+                                    <option value="university">大專院校 (用水基準: 87L/人日)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">教職員生總人數</label>
+                                <div class="relative group">
+                                    <input type="number" id="totalPeople" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：1200" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">人</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">總樓地板面積</label>
+                                <div class="relative group">
+                                    <input type="number" id="totalFloorArea" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="用以計算EUI" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">m²</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">空地面積 (扣除跑道與球場)</label>
+                                <div class="relative group">
+                                    <input type="number" id="emptyArea" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="用以計算綠覆率" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">m²</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">可綠化屋頂總面積</label>
+                                <div class="relative group">
+                                    <input type="number" id="roofArea" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="綠屋頂佔比分母" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">m²</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">113年用電總量</label>
+                                <div class="relative group">
+                                    <input type="number" id="annualElec" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：150000" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">度</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">113年用水總量</label>
+                                <div class="relative group">
+                                    <input type="number" id="annualWater" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：8000" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">度 (m³)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-600 mb-2">公務車年用油量 (柴油為主)</label>
+                                <div class="relative group">
+                                    <input type="number" id="annualFuel" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：1200" onchange="calculateScore()">
+                                    <span class="absolute right-4 top-3.5 text-slate-400 font-medium">公升 (L)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="selfAssessmentPanels" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                    </div>
+
+                    <div id="resultArea" class="hidden bg-white rounded-3xl shadow-xl overflow-hidden border border-emerald-100 relative">
+                        <div class="bg-gradient-to-r from-emerald-600 to-teal-600 p-6 text-center">
+                            <h3 class="text-2xl font-bold text-white tracking-wide">碳吉校園自評診斷報告</h3>
+                        </div>
+                        <div class="p-8 md:p-10">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                                <div class="py-4">
+                                    <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">預估自評總得分</p>
+                                    <p id="totalScore" class="text-6xl font-black text-emerald-600">0</p>
+                                    <div id="badgeLevel" class="text-base font-bold text-slate-500 mt-3 bg-slate-100 inline-block px-4 py-1.5 rounded-full">尚未達標</div>
+                                </div>
+                                <div class="py-4">
+                                    <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">本校額外加得分</p>
+                                    <p id="bonusScore" class="text-5xl font-extrabold text-amber-500">+0</p>
+                                    <p class="text-xs text-slate-400 mt-3 font-medium bg-amber-50 inline-block px-3 py-1 rounded-full">來自各定性加分選項</p>
+                                </div>
+                                <div class="py-4">
+                                    <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">能資源效率指數</p>
+                                    <div class="text-left max-w-[180px] mx-auto space-y-1 mt-2 text-sm text-slate-600">
+                                        <div class="flex justify-between font-mono"><span>人均用水:</span><span id="statWaterCap" class="font-bold text-slate-800">--</span></div>
+                                        <div class="flex justify-between font-mono"><span>本校EUI:</span><span id="statEUI" class="font-bold text-slate-800">--</span></div>
+                                        <div class="flex justify-between font-mono"><span>總碳排放:</span><span id="statEmissions" class="font-bold text-slate-800">--</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-10 bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                                <h4 class="font-bold text-blue-800 mb-3 text-lg flex items-center">
+                                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    規劃師建議與計算資訊：
+                                </h4>
+                                <ul id="suggestionList" class="list-disc list-inside text-blue-900 space-y-2 text-base font-medium">
+                                    <li>請先輸入資料進行診斷。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="documents" class="py-24 bg-slate-50 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <span class="text-emerald-600 font-bold tracking-widest uppercase text-xs bg-emerald-100 px-3 py-1 rounded-full">STEP 2</span>
+                    <h2 class="text-3xl font-bold text-slate-800 mt-4">佐證資料編輯器</h2>
+                    <p class="mt-3 text-slate-500">針對各指標提供動態勾選核對清單與檔案備份檔名上傳，一鍵產生正式低碳校園自評表格 (.docx)</p>
+                </div>
+
+                <div class="w-full flex flex-col h-full bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+                    <div class="bg-white p-4 border-b border-slate-200 shadow-sm flex justify-between items-center z-20">
+                        <h2 class="text-xl font-bold text-slate-800">低碳校園自評指標現況佐證表</h2>
+                        <button onclick="generateWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-medium flex items-center transition">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            生成 Word 檔
+                        </button>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto p-8 bg-slate-50" id="editorContainer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-slate-800 text-slate-400 py-12 text-center mt-12 border-t border-slate-700">
+            <p class="text-lg font-bold text-slate-200 mb-2">作品受著作權法保護，未經授權請勿複製轉載｜歡迎聯絡我們：tanji2026@gmail.com</p>
+            <p class="text-sm opacity-60">本系統僅供輔助試算與低碳校園自評表草稿生成，實際指標規範請以新北市政府環保局最新公告為準。</p>
+        </footer>
+    </main>
+
+    <div class="helper-btn" onclick="showHelperModal()">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    </div>
+
+    <div id="helperModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[60] backdrop-blur-sm" onclick="this.classList.add('hidden')">
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl transform transition-all scale-100" onclick="event.stopPropagation()">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-800">低碳校園標章認證輔助</h3>
+            </div>
+            <div class="space-y-4 text-slate-600 text-sm">
+                <p>1. 輸入學校基本用電、用水、教職員生數，系統將在第一步驟同步試算數據。</p>
+                <p>2. 各指標展開後皆可手動勾選並獲得對應分數，系統會即時在下方產出完整的碳吉診斷報告。</p>
+                <p>3. 點擊「素材工作台」按鈕可開啟對照側邊欄，將需要申報上傳的照片直接拖曳配置到第二步驟的佐證大表格中。</p>
+            </div>
+            <button onclick="document.getElementById('helperModal').classList.add('hidden')" class="w-full mt-8 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl transition">我知道了！</button>
+        </div>
+    </div>
+
+    <script>
+        const indicatorsData = [
+            {
+                id: "cat1",
+                title: "一、綠建築 (44分)",
+                color: "emerald",
+                items: [
+                    {
+                        id: "1-1",
+                        name: "1-1.生物多樣性",
+                        desc: "學校推動生態化營造，如生態邊坡、生態池或多層次植栽",
+                        type: "checkbox",
+                        score: 3,
+                        requirements: ["學校推動公共區域生態化營造、棲地營造或生物跳島照片", "生態植栽、生態邊坡、生態池成果展示說明"]
+                    },
+                    {
+                        id: "1-2-1",
+                        name: "1-2-1.綠屋頂",
+                        desc: "設有屋頂花園 or 農園，植栽面積達屋頂可綠化面積50%以上(3分)或30%~50%(2分)",
+                        type: "radio",
+                        groupName: "green_roof_sel",
+                        options: [
+                            { label: "綠屋頂面積達屋頂可綠化面積 50% 以上", score: 3 },
+                            { label: "綠屋頂面積達屋頂可綠化面積 30% ~ 50%", score: 2 }
+                        ],
+                        calcType: "green_roof",
+                        requirements: ["可綠化屋頂面積與實際綠化植栽面積之配置圖及計算數據", "屋頂綠化、屋頂農園或花園現場成果照片"]
+                    },
+                    {
+                        id: "1-2-2",
+                        name: "1-2-2.綠牆或綠廊",
+                        desc: "學校走廊、牆面、圍牆或圍籬綠化等成果",
+                        type: "checkbox",
+                        score: 3,
+                        requirements: ["校園室內外綠牆、綠廊實景照片", "綠牆遮陽降溫效果或維護紀錄說明文件"]
+                    },
+                    {
+                        id: "1-2-3",
+                        name: "1-2-3.綠覆率",
+                        desc: "空地面積(扣除球場、跑道)綠化或透水鋪面面積達50%以上",
+                        type: "checkbox",
+                        score: 3,
+                        calcType: "green_cover",
+                        requirements: ["綠化面積、透水鋪面與扣除跑道球場後之空地面積計算表", "不透水水泥鋪面綠化改善成果照片"]
+                    },
+                    {
+                        id: "1-3-1",
+                        name: "1-3-1.建築外殼節能",
+                        desc: "5年內進行外部隔熱遮陽改造(2分)或採用自然通風設計(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "1_3_1_a", label: "5年內外部隔熱或遮陽改造 (裝外遮陽/隔熱貼紙/屋頂隔熱等)", score: 2 },
+                            { id: "1_3_1_b", label: "校舍採用良好自然通風設計 (有效減低用電量)", score: 1 }
+                        ],
+                        requirements: ["隔熱改善工程或隔熱貼紙施作照片與經費證明", "校舍自然通風對流及遮陽降溫量測說明"]
+                    },
+                    {
+                        id: "1-3-2",
+                        name: "1-3-2.照明用電管理",
+                        desc: "使用省電或LED燈具，定時開關或感應開關(最多4+3分)",
+                        type: "radio_and_check",
+                        groupName: "lighting_type",
+                        options: [
+                            { label: "LED燈具使用率達 90% 以上", score: 4 },
+                            { label: "LED燈具使用率達 80% 以上", score: 3 },
+                            { label: "LED燈具使用率達 60% 以上", score: 2 },
+                            { label: "省電燈具使用率達 60% 以上", score: 1 }
+                        ],
+                        extras: [
+                            { id: "1_3_2_ex1", label: "公共空間飲水機 90% 以上設定定時定時關閉開關", score: 2, isBonus: true },
+                            { id: "1_3_2_ex2", label: "樓梯走廊穿堂等公共空間設置燈控感應開關", score: 1, isBonus: true }
+                        ],
+                        requirements: ["全校教室及公共區燈具汰換LED或省電燈具數量統計盤點表", "飲水機定時定點關閉控制器設定照片", "樓梯走廊公共空間感應點滅裝置照片"]
+                    },
+                    {
+                        id: "1-3-3",
+                        name: "1-3-3.能源管理系統",
+                        desc: "建立能資源檢核與管理系統(資源、電力管理系統)",
+                        type: "checkbox",
+                        score: 1,
+                        requirements: ["校園能源、電力管理系統(EMS)後台截圖與運作紀錄", "能資源定期統計與用電趨勢分析說明檔"]
+                    },
+                    {
+                        id: "1-3-4",
+                        name: "1-3-4.空調",
+                        desc: "訂有空調使用辦法(1分)且採用75%以上變頻空調(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "1_3_4_a", label: "訂定具體管理辦法與有效使用空調高效能設備", score: 1 },
+                            { id: "1_3_4_b", label: "校園空調使用變頻空調達 75% 以上", score: 1 }
+                        ],
+                        requirements: ["學校核定公告之冷氣空調使用與維護管理辦法", "全校變頻與非變頻空調設備比例統計清冊"]
+                    },
+                    {
+                        id: "1-3-5",
+                        name: "1-3-5.排風管理",
+                        desc: "露天停車場自然通風(1分)或地下停車場裝設CO偵測及排風控制(1分)",
+                        type: "radio",
+                        groupName: "parking_vent",
+                        options: [
+                            { label: "露天停車場達自然通風效果，且宣導避免怠速", score: 1 },
+                            { label: "地下停車場加裝CO偵測器等節能排風控制系統", score: 1 }
+                        ],
+                        requirements: ["校區露天停車場避免怠速宣導海報及照片", "地下停車場CO偵測器與排風聯動控制設備實拍照片"]
+                    },
+                    {
+                        id: "1-3-6",
+                        name: "1-3-6.年度用電指標 EUI",
+                        desc: "EUI值小於經濟部公告之指標值(2分)，優於指標值之80%(加1分)",
+                        type: "radio",
+                        groupName: "eui_score_sel",
+                        options: [
+                            { label: "本校年度 EUI 值小於指標值之 80% (特優)", score: 3 },
+                            { label: "本校年度 EUI 值小於或等於經濟部公告之 EUI 指標值", score: 2 }
+                        ],
+                        calcType: "eui_val",
+                        requirements: ["台電歷史電費與用電量查詢佐證紀錄", "樓地板面積使用執照影本或申報核准公文"]
+                    },
+                    {
+                        id: "1-4-1",
+                        name: "1-4-1.節約用水管理",
+                        desc: "公共洗手用水省水器材(2分)且定期進行管線漏水檢測(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "1_4_1_a", label: "所有公共區域洗手用水均裝設省水器材", score: 2 },
+                            { id: "1_4_1_b", label: "定期進行校區管線漏水檢測並備有紀錄", score: 1 }
+                        ],
+                        requirements: ["全校水龍頭公共區域裝設省水標章器材之照片", "管線漏水檢修紀錄表或巡檢紀錄公文"]
+                    },
+                    {
+                        id: "1-4-2",
+                        name: "1-4-2.雜用水或雨水管理",
+                        desc: "雨水再利用(2分)、雜排水利用(2分)、水資源利用率4%以上(3分)或8%以上(4分)",
+                        type: "checkbox_multi_with_radio",
+                        checkboxes: [
+                            { id: "1_4_2_a", label: "設置雨水再利用設施並妥善用於綠美化 or 沖廁", score: 2 },
+                            { id: "1_4_2_b", label: "設置生活雜排水再利用設施並妥善使用", score: 2 }
+                        ],
+                        radioGroup: "water_recycle_rate",
+                        radioOptions: [
+                            { label: "水資源利用率達 8% 以上 (加分選項)", score: 4 },
+                            { label: "水資源利用率達 4% 以上", score: 3 }
+                        ],
+                        calcType: "water_recycle",
+                        requirements: ["雨水收集槽、沉澱過濾系統、生活雜排水利用之工程照片", "各水源加裝水錶供計量之抄表歷史紀錄"]
+                    },
+                    {
+                        id: "1-5",
+                        name: "1-5.每人每日用水量",
+                        desc: "符合人均標準：國小<=28、國中<=25、高中<=32、大專<=87公升(3分)，低於標準之80%(加1分)",
+                        type: "radio",
+                        groupName: "water_per_capita_sel",
+                        options: [
+                            { label: "每人每日用水量小於或等於基準值之 80% (極省水)", score: 4 },
+                            { label: "每人每日用水量符合所屬學校層級之公告指標值", score: 3 }
+                        ],
+                        calcType: "water_cap",
+                        requirements: ["自來水費單據影本與教職員人數清冊", "全校自來水總表與主要分區水錶數據核對表"]
+                    }
+                ]
+            },
+            {
+                id: "cat2",
+                title: "二、綠色能源 (15分)",
+                color: "amber",
+                items: [
+                    {
+                        id: "2-1",
+                        name: "2-1.應用再生能源",
+                        desc: "光電風力裝置或熱水集熱面積符合各級容量規範",
+                        type: "radio",
+                        groupName: "renew_energy_sel",
+                        options: [
+                            { label: "光電/風能 >= 3.67 kW 或 光電1~3.67kW合併其他示範設施", score: 5 },
+                            { label: "光電/風能 1 ~ 3.67 kW 或 太陽能熱水集熱面積 >= 67m²", score: 4 },
+                            { label: "光電/風能 < 1 kW 或 太陽能熱水集熱面積 < 67m²", score: 2 }
+                        ],
+                        requirements: ["學校設置太陽光電板、風力發電機或熱水器之現場照片", "設備容量規格牌或台電併聯發電計量合約書影本"]
+                    },
+                    {
+                        id: "2-2-1",
+                        name: "2-2-1.節電年度績效",
+                        desc: "前1年用電量較前2-4年連續3年平均降低：1%~5%(2分)、5%~10%(4分)、>10%(5分)",
+                        type: "radio",
+                        groupName: "elec_perf_sel",
+                        options: [
+                            { label: "年度總用電量平均降低超過 10%", score: 5 },
+                            { label: "年度總用電量平均降低超過 5% ~ 10% 以下", score: 4 },
+                            { label: "年度總用電量平均降低 1% ~ 5% 以下", score: 2 }
+                        ],
+                        requirements: ["台電電號證明文件", "前1年及過去連續3年之台電歷史用電度數明細資料"]
+                    },
+                    {
+                        id: "2-2-2",
+                        name: "2-2-2.節水年度績效",
+                        desc: "前1年用水量較前2-4年連續3年平均降低：1%~5%(2分)、5%~10%(4分)、>10%(5分)",
+                        type: "radio",
+                        groupName: "water_perf_sel",
+                        options: [
+                            { label: "年度總用水量平均降低超過 10%", score: 5 },
+                            { label: "年度總用水量平均降低超過 5% ~ 10% 以下", score: 4 },
+                            { label: "年度總用水量平均降低 1% ~ 5% 以下", score: 2 }
+                        ],
+                        requirements: ["自來水水號證明文件", "前1年及過去連續3年之水費度數明細證明"]
+                    }
+                ]
+            },
+            {
+                id: "cat3",
+                title: "三、循環資源 (19分)",
+                color: "sky",
+                items: [
+                    {
+                        id: "3-1",
+                        name: "3-1.垃圾減量",
+                        desc: "禁用免洗餐具(2分)且推動三不政策不帶零食飲料留廚餘達1年(2分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "3_1_a", label: "學校實施禁用免洗餐具並具有具體推廣成果", score: 2 },
+                            { id: "3_1_b", label: "學校推動不帶零食、飲料、廚餘之三不政策達 1 年以上", score: 2 }
+                        ],
+                        requirements: ["校園實施宣導公文或禁用免洗餐具之配套執行規範", "三不政策（無垃圾零食包裝、減少廚餘）推行方案與成果照"]
+                    },
+                    {
+                        id: "3-2",
+                        name: "3-2.資源回收分類",
+                        desc: "資源回收分類統計資料庫(1分)、回收分類桶(1分)、隨袋徵收專用垃圾袋(2分加分)、細分類達3類以上(1分加分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "3_2_a", label: "建立資源回收、分類、垃圾減量之定期統計資料庫", score: 1 },
+                            { id: "3_2_b", label: "公共區域長期設立分類回收區，具一般/回收/廚餘3類", score: 1 },
+                            { id: "3_2_c", label: "加分項目: 配合「垃圾處理隨袋徵收」使用專用垃圾袋", score: 2, isBonus: true },
+                            { id: "3_2_extra_categories", label: "加分項目: 細分類達 3 類以上 (乾電池/光源/塑膠/紙/光碟等)", score: 1, isBonus: true }
+                        ],
+                        requirements: ["資源回收資料庫後台或每月資源回收量統計表", "公共回收區標誌標示、專用垃圾袋使用狀況抽檢相片", "廢燈泡、乾電池、行動電話等特殊細分類貯存點相片"]
+                    },
+                    {
+                        id: "3-3",
+                        name: "3-3.資源再利用",
+                        desc: "資源再利用機制1年、落葉堆肥(1-2分)與廚餘堆肥(2-3分)",
+                        type: "checkbox_multi_with_radio",
+                        checkboxes: [
+                            { id: "3_3_a", label: "長期設立資源再利用策略(如二手書交換/舊衣回收)達1年以上", score: 2 }
+                        ],
+                        radioGroup: "leaf_compost",
+                        radioOptions: [
+                            { label: "推動落葉堆肥有計畫且將肥料後續運用或與社區分享", score: 2 },
+                            { label: "學校推動落葉堆肥，具體管理辦法與學生共同參與", score: 1 }
+                        ],
+                        radioGroup2: "food_compost",
+                        radioOptions2: [
+                            { label: "推動廚餘再利用有計畫且肥料後續運用或與社區分享", score: 3 },
+                            { label: "學校推動廚餘再利用，具體管理辦法與學生共同參與", score: 2 }
+                        ],
+                        requirements: ["二手教科書、制服舊物交換日或常設回收交換站照片", "落葉堆肥堆置區管理計畫、學生動手翻堆施肥照片", "廚餘機、堆肥桶維運計畫及將有機肥料施於校內花圃照片"]
+                    }
+                ]
+            },
+            {
+                id: "cat4",
+                title: "四、綠色交通 (21分)",
+                color: "violet",
+                items: [
+                    {
+                        id: "4-1",
+                        name: "4-1.走路上學",
+                        desc: "宣導、每週1日走路上學體驗、交通志工、導護與糾察、獎勵辦法",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "4_1_a", label: "利用網路或朝會宣導走路上學觀念", score: 1 },
+                            { id: "4_1_b", label: "訂定走路上學日，鼓勵每週 1 日體驗並持續推動", score: 1 },
+                            { id: "4_1_c", label: "鼓勵家長與社區人士踴躍加入交通導護志工行列", score: 1 },
+                            { id: "4_1_d", label: "設有教師導護隊及學生糾察隊共同推動", score: 1 },
+                            { id: "4_1_e", label: "訂定走路上學獎勵辦法、競賽或文藝宣導活動", score: 1 }
+                        ],
+                        requirements: ["朝會宣導剪影或學校網站推廣綠色低碳通學照片", "每週一日走路上學實施成果、導護與糾察簽到紀錄", "走路上學集點卡、獎勵辦法 or 競賽文宣"]
+                    },
+                    {
+                        id: "4-2",
+                        name: "4-2.共乘通學",
+                        desc: "宣導共乘(1分)及指導課程瞭解共乘優缺點(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "4_2_a", label: "利用網路或朝會宣導「共乘通學」", score: 1 },
+                            { id: "4_2_b", label: "於課堂或通識教育指導學生共乘目的與優點", score: 1 }
+                        ],
+                        requirements: ["共乘宣導海報及教師晨會共乘通學推廣照片", "交通安全教育課程中融入低碳共乘與共載之教案講義"]
+                    },
+                    {
+                        id: "4-3",
+                        name: "4-3.接駁候車區",
+                        desc: "設置交通接駁車(1分)、電動化加分(1分)、設置接送候車區(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "4_3_a", label: "學校設置交通(接駁)車供搭乘", score: 1 },
+                            { id: "4_3_b", label: "加分項目: 推動交通(接駁)車電動化", score: 1, isBonus: true },
+                            { id: "4_3_c", label: "學校設置安全接送(駁)候車區", score: 1 }
+                        ],
+                        requirements: ["校車/接駁車照片、安全接駁候車區實景與標示照片", "加分：電動公務交通接駁車行照或租賃合約證明"]
+                    },
+                    {
+                        id: "4-4",
+                        name: "4-4.友善交通環境",
+                        desc: "明確交通設施標示(1分)、無障礙通學步道(1分)與人車分道(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "4_4_a", label: "通學路口或校園內設有明確交通設施(反光鏡/標誌)", score: 1 },
+                            { id: "4_4_b", label: "建立或配合設置無障礙通學步道", score: 1 },
+                            { id: "4_4_c", label: "校內積極推行人車分道(或校園全無車輛進入)", score: 1 }
+                        ],
+                        requirements: ["校園人車分道管制區照片、反光鏡及交通標誌位置照片", "無障礙斜坡、平整之通學步道現場實拍成果"]
+                    },
+                    {
+                        id: "4-5",
+                        name: "4-5.低污染運具",
+                        desc: "購置或租用電動機車(2分)或自行車/大眾運輸公務使用(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "4_5_a", label: "學校購置或租用電動機車作為公務聯繫替代之用", score: 2 },
+                            { id: "4_5_b", label: "學校公務聯繫使用自行車、大眾運輸等其他低污染運具", score: 1 }
+                        ],
+                        requirements: ["學校名下購置 or 租賃電動機車之發票公務合約與行照", "大眾運輸乘車簽到表、自行車公務借用登記簿"]
+                    },
+                    {
+                        id: "4-6",
+                        name: "4-6.綠色交通安全教育",
+                        desc: "自行車安全教育(1分)與綠色交通宣導(1分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "4_6_a", label: "校內推動自行車安全騎乘與考照宣導教育", score: 1 },
+                            { id: "4_6_b", label: "宣導並規劃實施綠色交通安全教育與活動", score: 1 }
+                        ],
+                        requirements: ["自行車校內騎乘教育訓練、障礙排除演練相片", "綠色交通安全融入教學教案、朝會宣導照片紀錄"]
+                    },
+                    {
+                        id: "4-7",
+                        name: "4-7.電動機車使用率",
+                        desc: "依師生或家長低碳運具代步比例，自動或手動判定等級 score (1-3分)",
+                        type: "radio",
+                        groupName: "ev_rate_level",
+                        options: [
+                            { label: "高標 (學生使用率>=5% 或家長>=12% 或教師>=20%)", score: 3 },
+                            { label: "中標 (學生使用率>=3% 或家長>=6% 或教師>=10%)", score: 2 },
+                            { label: "低標 (學生使用率>=1% 或家長>=3% 或教師>=5%)", score: 1 }
+                        ],
+                        requirements: ["全校師生及家長使用電動運具（機車/汽車）問卷盤點數據", "電動機車通學登記簿與停車專區綠能車位照片"]
+                    }
+                ]
+            },
+            {
+                id: "cat5",
+                title: "五、永續生活環境 (20分)",
+                color: "orange",
+                items: [
+                    {
+                        id: "5-1",
+                        name: "5-1.學校規約與宣導",
+                        desc: "訂有低碳校園管理政策或節能規約，特定宣導每年2次以上",
+                        type: "checkbox",
+                        score: 1,
+                        requirements: ["學校核定發布之節能減碳、低碳校園特定管理條約及規約公文", "每年2次以上辦理節能低碳講座或朝會實踐照片與文宣"]
+                    },
+                    {
+                        id: "5-2",
+                        name: "5-2.零碳校園管理團隊",
+                        desc: "成立推動小組且每季開會(2分)，若3名成員受訓時數達10小時以上(3分)",
+                        type: "radio",
+                        groupName: "low_carbon_team",
+                        options: [
+                            { label: "推動小組定期開會且3名成員受減碳時數受訓累計達 10 小時以上", score: 3 },
+                            { label: "設有節約能源推動小組，且定期開會(每季至少1次)", score: 2 }
+                        ],
+                        requirements: ["推動小組成立與委員組織公文、會議紀錄及照片佐證", "受訓人員之溫室氣體或節能減碳研習合格證書與時數證明"]
+                    },
+                    {
+                        id: "5-3",
+                        name: "5-3.綠色消費",
+                        desc: "優先推動綠色消費或採購，每年綠色採購3次以上並有成果",
+                        type: "checkbox",
+                        score: 2,
+                        requirements: ["政府綠色採購申報系統成果截圖", "採購節能環保、綠色標章公務用品之發票憑證與明細"]
+                    },
+                    {
+                        id: "5-4",
+                        name: "5-4.零碳教育融入",
+                        desc: "融入課程教材2次、碳權課程(3分)、教師研習(2分)、結合社區(2分)",
+                        type: "checkbox_multi_with_radio",
+                        checkboxes: [
+                            { id: "5_4_b", label: "教師低碳/零碳知能訓練研習並有成果(每學期辦理2次)", score: 2 },
+                            { id: "5_4_c", label: "結合社區、里或周邊企業推動低碳、碳權、零碳推動教育成果", score: 2 }
+                        ],
+                        radioGroup: "edu_integrate",
+                        radioOptions: [
+                            { label: "融入低碳概念且課程包含碳匯、碳權、碳盤查等核心概念", score: 3 },
+                            { label: "設計低碳/零碳融入課程、教材、課綱有成果者 (每學期2次)", score: 2 }
+                        ],
+                        requirements: ["融入碳盤查、碳足跡、碳匯概念之特色教案、教材課綱證明", "教師低碳研習簽到冊、結合社區/企業共辦低碳宣導成果報告書"]
+                    },
+                    {
+                        id: "5-5",
+                        name: "5-5.低碳特色特色場域",
+                        desc: "建立零碳教學場域(2分)、配合智慧節電(2分)與無毒有機農園(3分)",
+                        type: "checkbox_multi",
+                        options: [
+                            { id: "5_5_a", label: "運用校園與教學空間建立零碳概念教學情境場域", score: 2 },
+                            { id: "5_5_b", label: "配合新北市政府推廣智慧節電政策或相關推廣活動", score: 2 },
+                            { id: "5_5_c", label: "推動無毒、有機農園，利用頂樓或閒置土地種植蔬果作物", score: 3 }
+                        ],
+                        requirements: ["零碳主題教學情境專區實景照片（如雨水回收模型等）", "智慧節電競賽參與 or 市府節電活動推廣紀錄照片", "學校閒置空地、陽台頂樓無毒或有機菜園種植剪影"]
+                    }
+                ]
+            },
+            {
+                id: "cat6",
+                title: "六、創新作為 (21分)",
+                color: "rose",
+                items: [
+                    {
+                        id: "6-1",
+                        name: "6-1.碳中和校園",
+                        desc: "提供排碳數據(1分)、創能量(1分)、固碳量(1分)，達成碳中和獲19分",
+                        type: "checkbox_multi_neutral",
+                        options: [
+                            { id: "6_1_a", label: "本校已盤查並提供年度能源使用排碳數據", score: 1 },
+                            { id: "6_1_b", label: "本校設有光電等並提供創能減碳量數據", score: 1 },
+                            { id: "6_1_c", label: "本校完成校區固碳普查並提供喬/灌木與草花固碳量", score: 1 }
+                        ],
+                        requirements: ["排碳、固碳、創能簡易電子計算報表", "售電與台電之太陽光電系統電能計量明細表", "校園喬木樹種、灌木、草花花圃之面積普查清冊"]
+                    },
+                    {
+                        id: "6-2",
+                        name: "6-2.零碳行動日",
+                        desc: "擇定一日，於該日辦理一項全校淨零行動的實踐與體驗活動",
+                        type: "checkbox",
+                        score: 1,
+                        requirements: ["全校性淨零行動日、零碳倡議簽署活動之照片紀錄", "當日執行資源減量、自備餐具等量化減量成果統計"]
+                    },
+                    {
+                        id: "6-3",
+                        name: "6-3.創新項目",
+                        desc: "具在地特色低碳創新作為或配合新北市政府各機關相關低碳政策(2-3分)",
+                        type: "radio",
+                        groupName: "innov_project",
+                        options: [
+                            { label: "低碳創新或配合新北市低碳政策，佐證最完整優異", score: 3 },
+                            { label: "學校自辦具地方特色之其他低碳創新作為與實踐方案", score: 2 }
+                        ],
+                        requirements: ["校園專利低碳點子、綠能創意展示或市府環保獎項核准公文", "低碳校園創新特色作為之簡報成果 or 多媒體紀錄"]
+                    }
+                ]
+            },
+            {
+                id: "cat7",
+                title: "特殊情形加分 (5分)",
+                color: "slate",
+                items: [
+                    {
+                        id: "extra_adjust",
+                        name: "特殊情形調整分數",
+                        desc: "辦理中央餐廚供應鄰校、游泳池對外開放、受限地理抗力因素等(至多加5分)",
+                        type: "radio",
+                        groupName: "special_adjust",
+                        options: [
+                            { label: "經評估符合特殊情形核給 5 分", score: 5 },
+                            { label: "經評估符合特殊情形核給 4 分", score: 4 },
+                            { label: "經評估符合特殊情形核給 3 分", score: 3 },
+                            { label: "經評估符合特殊情形核給 2 分", score: 2 },
+                            { label: "經評估符合特殊情形核給 1 分", score: 1 }
+                        ],
+                        requirements: ["中央餐廚提供鄰近學校用餐、游泳池對外開放等佐證公文及統計表", "不可抗力之地理限制、特殊情境之文字具體說明書"]
+                    }
+                ]
+            }
+        ];
+
+        let radioState = {};
+        function toggleRadio(element) {
+            if (radioState[element.name] === element) {
+                element.checked = false;
+                radioState[element.name] = null;
+                calculateScore();
+            } else {
+                radioState[element.name] = element;
+                calculateScore();
+            }
+        }
+
+        function calculateScore() {
+            const people = parseInt(document.getElementById('totalPeople').value) || 0;
+            const floorArea = parseFloat(document.getElementById('totalFloorArea').value) || 0;
+            const emptyArea = parseFloat(document.getElementById('emptyArea').value) || 0;
+            const roofArea = parseFloat(document.getElementById('roofArea').value) || 0;
+            const elec = parseFloat(document.getElementById('annualElec').value) || 0;
+            const water = parseFloat(document.getElementById('annualWater').value) || 0;
+            const fuel = parseFloat(document.getElementById('annualFuel').value) || 0;
+            const schoolType = document.getElementById('schoolType').value;
+
+            let EUI = 0;
+            if (floorArea > 0 && elec > 0) {
+                EUI = elec / floorArea;
+            }
+
+            let waterPerCapita = 0;
+            if (people > 0 && water > 0) {
+                waterPerCapita = (water * 1000) / 365 / people;
+            }
+
+            let carbonEmissions = (elec * 0.474) + (fuel * 2.606);
+
+            document.getElementById('statWaterCap').innerText = waterPerCapita > 0 ? waterPerCapita.toFixed(1) + " L" : "--";
+            document.getElementById('statEUI').innerText = EUI > 0 ? EUI.toFixed(1) : "--";
+            document.getElementById('statEmissions').innerText = carbonEmissions > 0 ? Math.round(carbonEmissions).toLocaleString() + " kg" : "--";
+
+            let score = 0;
+            let bonusScore = 0;
+
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                if (cb.name !== "indicators" && !cb.classList.contains("editor-checklist-item")) {
+                    const s = parseInt(cb.value) || 0;
+                    score += s;
+                    if (cb.dataset.isBonus === "true") {
+                        bonusScore += s;
+                    }
+                }
+            });
+
+            const radioGroups = [
+                "green_roof_sel", "parking_vent", "eui_score_sel", "water_per_capita_sel",
+                "renew_energy_sel", "elec_perf_sel", "water_perf_sel", "leaf_compost",
+                "food_compost", "ev_rate_level", "low_carbon_team", "edu_integrate",
+                "innov_project", "special_adjust"
+            ];
+
+            radioGroups.forEach(group => {
+                const checked = document.querySelector(`input[name="${group}"]:checked`);
+                if (checked) {
+                    const s = parseInt(checked.value) || 0;
+                    score += s;
+                }
+            });
+
+            const checked_1_4_2_rate = document.querySelector(`input[name="water_recycle_rate"]:checked`);
+            if (checked_1_4_2_rate) {
+                const s = parseInt(checked_1_4_2_rate.value) || 0;
+                score += s;
+                if (s === 4) {
+                    bonusScore += 1;
+                }
+            }
+
+            const c_solar = parseFloat(document.getElementById('input_c_solar')?.value) || 0;
+            const c_tree = parseFloat(document.getElementById('input_c_tree')?.value) || 0;
+            const c_shrub = parseFloat(document.getElementById('input_c_shrub')?.value) || 0;
+            const c_flower = parseFloat(document.getElementById('input_c_flower')?.value) || 0;
+
+            const creation = c_solar * 0.474;
+            const sequestration = (c_flower * 0.3) + (c_shrub * 0.5) + (c_tree * 2);
+            const totalSequestration = creation + sequestration;
+
+            let carbonNeutralScore = 0;
+            const cb61a = document.getElementById("cb_6_1_a")?.checked;
+            const cb61b = document.getElementById("cb_6_1_b")?.checked;
+            const cb61c = document.getElementById("cb_6_1_c")?.checked;
+
+            if (cb61a) carbonNeutralScore += 1;
+            if (cb61b) carbonNeutralScore += 1;
+            if (cb61c) carbonNeutralScore += 1;
+
+            let carbonNeutralReached = false;
+            if (carbonEmissions > 0 && totalSequestration >= carbonEmissions) {
+                carbonNeutralScore = 19;
+                carbonNeutralReached = true;
+            }
+
+            score += carbonNeutralScore;
+
+            if (document.getElementById('dash_emission')) {
+                document.getElementById('dash_emission').innerText = Math.round(carbonEmissions).toLocaleString();
+                document.getElementById('val_sequestration').innerText = Math.round(totalSequestration).toLocaleString();
+                const diff = carbonEmissions - totalSequestration;
+                const cBox = document.getElementById("carbon_result_box");
+                const cLabel = document.getElementById("carbon_gap_label");
+                const cVal = document.getElementById("carbon_gap_val");
+                if (diff <= 0 && carbonEmissions > 0) {
+                    cBox.className = "col-span-1 bg-emerald-100 p-2 rounded-lg border border-emerald-200 text-center flex flex-col justify-center sm:col-span-1";
+                    cLabel.innerText = "減碳狀態";
+                    cLabel.className = "text-xs font-bold text-emerald-600 mb-1";
+                    cVal.innerText = "已達成碳中和！";
+                    cVal.className = "text-sm font-bold text-emerald-700";
+                } else if (carbonEmissions > 0) {
+                    cBox.className = "col-span-1 bg-rose-50 p-2 rounded-lg border border-rose-100 text-center flex flex-col justify-center sm:col-span-1";
+                    cLabel.innerText = "距離碳中和";
+                    cLabel.className = "text-xs font-bold text-rose-500 mb-1";
+                    cVal.innerText = "差 " + Math.round(diff).toLocaleString() + " kg";
+                    cVal.className = "text-sm font-bold text-rose-600";
+                } else {
+                    cBox.className = "col-span-1 bg-slate-50 p-2 rounded-lg border border-slate-200 text-center flex flex-col justify-center sm:col-span-1";
+                    cLabel.innerText = "碳中和計算";
+                    cVal.innerText = "請完成設定";
+                    cVal.className = "text-sm font-bold text-slate-500";
+                }
+            }
+
+            document.getElementById('totalScore').innerText = score;
+            document.getElementById('bonusScore').innerText = "+" + bonusScore;
+
+            let level = "尚未達標";
+            let levelClass = "text-slate-500 bg-slate-100";
+            if (score >= 85) {
+                level = "金熊級";
+                levelClass = "text-purple-600 bg-purple-100 ring-1 ring-purple-200";
+            } else if (score >= 60) {
+                level = "銀鵝級";
+                levelClass = "text-blue-600 bg-blue-100 ring-1 ring-blue-200";
+            }
+
+            document.getElementById('badgeLevel').innerText = level;
+            document.getElementById('badgeLevel').className = `text-lg font-bold mt-3 inline-block px-4 py-1.5 rounded-full shadow-sm ${levelClass}`;
+
+            const suggestions = [];
+            if (score < 60) {
+                suggestions.push(`目前分數離「銀鵝級(及格)」還差 ${60 - score} 分，請繼續在指標內勾選現況。`);
+            } else if (score < 85) {
+                suggestions.push(`已取得「🥈 銀鵝級」標章認證！距離「🏆 金熊級」還差 ${85 - score} 分。`);
+            } else {
+                suggestions.push(`恭喜！本校自評分數已成功取得最高榮譽「🏆 金熊級」標章認證！`);
+            }
+
+            if (people > 0 && waterPerCapita > 0) {
+                const limits = { elementary: 28, junior: 25, high: 32, university: 87 };
+                const currentLimit = limits[schoolType];
+                if (waterPerCapita <= currentLimit * 0.8) {
+                    suggestions.push(`本校人均用水量 (${waterPerCapita.toFixed(1)} L) 低於標準 80%，將可獲得 1-5 項目的 4 分滿分！`);
+                } else if (waterPerCapita <= currentLimit) {
+                    suggestions.push(`本校人均用水量符合 ${schoolType === "elementary" ? "國小" : schoolType === "junior" ? "國中" : schoolType === "high" ? "高中" : "大學"} 標準 (<= ${currentLimit} L)，獲得基本分 3 分。`);
+                } else {
+                    suggestions.push(`人均用水 (${waterPerCapita.toFixed(1)} L) 超過該校層標準 (${currentLimit} L)，將無法獲得 1-5 的分數，建議加強公共省水閥。`);
+                }
+            }
+
+            if (carbonNeutralReached) {
+                suggestions.push("本校創能與固碳總量大於能源總排放，達成「碳中和校園」，6-1項目直接獲得19分最高滿分！");
+            }
+
+            document.getElementById('suggestionList').innerHTML = suggestions.map(s => `<li>${s}</li>`).join('');
+            document.getElementById('resultArea').classList.remove('hidden');
+
+            const stateData = {
+                schoolType, people, floorArea, emptyArea, roofArea, elec, water, fuel,
+                c_solar, c_tree, c_shrub, c_flower,
+                checkboxStates: Array.from(document.querySelectorAll('#calcForm input[type="checkbox"]')).map(cb => cb.checked),
+                radioStates: radioGroups.reduce((acc, name) => {
+                    const sel = document.querySelector(`input[name="${name}"]:checked`);
+                    if (sel) acc[name] = sel.value;
+                    return acc;
+                }, {}),
+                waterRecycleRateSel: checked_1_4_2_rate ? checked_1_4_2_rate.value : null
+            };
+            localStorage.setItem('tanji_school_score_data', JSON.stringify(stateData));
+            updateEditorBadges();
+            
+            if (document.getElementById('totalScoreDisplay')) document.getElementById('totalScoreDisplay').innerText = score;
+            if (document.getElementById('bonusScoreDisplay')) document.getElementById('bonusScoreDisplay').innerText = "+" + bonusScore;
+            const elLevel = document.getElementById('levelDisplay');
+            if (elLevel) {
+                elLevel.innerText = score >= 85 ? "🏆 金熊級" : score >= 60 ? "🥈 銀鵝級" : "尚未達標";
+                elLevel.className = `px-4 py-2 rounded-lg text-sm font-bold border ${score >= 85 ? 'bg-purple-600 text-white border-purple-500' : score >= 60 ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-700 text-slate-300 border-slate-600'}`;
+            }
+            if (document.getElementById('gapDisplay')) {
+                document.getElementById('gapDisplay').innerText = score >= 85 ? "恭喜達標最高等級！" : score >= 60 ? `離金熊級還差 ${85 - score} 分` : `離銀鵝級還差 ${60 - score} 分`;
+            }
+        }
+
+        function updateEditorBadges() {
+            const gr_sel = document.querySelector('input[name="green_roof_sel"]:checked');
+            const gc_checked = document.getElementById('cb_1_2_3')?.checked;
+            const eui_sel = document.querySelector('input[name="eui_score_sel"]:checked');
+            const water_sel = document.querySelector('input[name="water_per_capita_sel"]:checked');
+
+            const people = parseInt(document.getElementById('totalPeople').value) || 0;
+            const floorArea = parseFloat(document.getElementById('totalFloorArea').value) || 0;
+            const water = parseFloat(document.getElementById('annualWater').value) || 0;
+            const elec = parseFloat(document.getElementById('annualElec').value) || 0;
+
+            let EUI = 0;
+            if (floorArea > 0 && elec > 0) EUI = elec / floorArea;
+            let waterPerCapita = 0;
+            if (people > 0 && water > 0) waterPerCapita = (water * 1000) / 365 / people;
+
+            const grBadge = document.getElementById("editor_badge_1-2-1");
+            if (grBadge) {
+                if (gr_sel) {
+                    grBadge.innerText = "自評選填：" + (gr_sel.value === "3" ? "50%以上 (3分)" : "30%-50% (2分)");
+                    grBadge.className = "ml-2 px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 rounded";
+                } else {
+                    grBadge.innerText = "尚未在自評表勾選";
+                    grBadge.className = "ml-2 px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 rounded";
+                }
+            }
+
+            const gcBadge = document.getElementById("editor_badge_1-2-3");
+            if (gcBadge) {
+                if (gc_checked) {
+                    gcBadge.innerText = "自評選填：綠覆率50%以上 (3分)";
+                    gcBadge.className = "ml-2 px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 rounded";
+                } else {
+                    gcBadge.innerText = "尚未在自評表勾選";
+                    gcBadge.className = "ml-2 px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 rounded";
+                }
+            }
+
+            const euiBadge = document.getElementById("editor_badge_1-3-6");
+            if (euiBadge) {
+                if (eui_sel) {
+                    euiBadge.innerText = `自評選填：EUI符合規範 (本校 EUI: ${EUI > 0 ? EUI.toFixed(1) : "--"}, 得 ${eui_sel.value} 分)`;
+                    euiBadge.className = "ml-2 px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 rounded";
+                } else {
+                    euiBadge.innerText = "尚未在自評表勾選";
+                    euiBadge.className = "ml-2 px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 rounded";
+                }
+            }
+
+            const waterBadge = document.getElementById("editor_badge_1-5");
+            if (waterBadge) {
+                if (water_sel) {
+                    waterBadge.innerText = `自評選填：人均用水符合基準 (本校: ${waterPerCapita > 0 ? waterPerCapita.toFixed(1) + " L" : "--"}, 得 ${water_sel.value} 分)`;
+                    waterBadge.className = "ml-2 px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 rounded";
+                } else {
+                    waterBadge.innerText = "尚未在自評表勾選";
+                    waterBadge.className = "ml-2 px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 rounded";
+                }
+            }
+        }
+
+        function saveData() {
+            const data = localStorage.getItem('tanji_school_score_data');
+            const editor_data = localStorage.getItem('tanji_school_editor_data');
+            const bundle = {
+                scoreData: data ? JSON.parse(data) : null,
+                editorData: editor_data ? JSON.parse(editor_data) : null
+            };
+            const blob = new Blob([JSON.stringify(bundle)], {type: "application/json;charset=utf-8"});
+            saveAs(blob, `低碳校園自評資料備份_${new Date().toISOString().slice(0,10)}.json`);
+        }
+
+        function loadData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const bundle = JSON.parse(e.target.result);
+                    if (bundle.scoreData) {
+                        const data = bundle.scoreData;
+                        document.getElementById('schoolType').value = data.schoolType || 'elementary';
+                        document.getElementById('totalPeople').value = data.people || '';
+                        document.getElementById('totalFloorArea').value = data.floorArea || '';
+                        document.getElementById('emptyArea').value = data.emptyArea || '';
+                        document.getElementById('roofArea').value = data.roofArea || '';
+                        document.getElementById('annualElec').value = data.elec || '';
+                        document.getElementById('annualWater').value = data.water || '';
+                        document.getElementById('annualFuel').value = data.fuel || '';
+
+                        if (document.getElementById('input_c_solar')) {
+                            document.getElementById('input_c_solar').value = data.c_solar || '';
+                            document.getElementById('input_c_tree').value = data.c_tree || '';
+                            document.getElementById('input_c_shrub').value = data.c_shrub || '';
+                            document.getElementById('input_c_flower').value = data.c_flower || '';
+                        }
+
+                        const formCheckboxes = Array.from(document.querySelectorAll('#calcForm input[type="checkbox"]'));
+                        if (data.checkboxStates) {
+                            data.checkboxStates.forEach((val, idx) => {
+                                if (formCheckboxes[idx]) formCheckboxes[idx].checked = val;
+                            });
+                        }
+
+                        if (data.radioStates) {
+                            for (const [name, val] of Object.entries(data.radioStates)) {
+                                const rb = document.querySelector(`input[name="${name}"][value="${val}"]`);
+                                if (rb) rb.checked = true;
+                            }
+                        }
+
+                        if (data.waterRecycleRateSel) {
+                            const rbWater = document.querySelector(`input[name="water_recycle_rate"][value="${data.waterRecycleRateSel}"]`);
+                            if (rbWater) rbWater.checked = true;
+                        }
+                    }
+
+                    if (bundle.editorData) {
+                        localStorage.setItem('tanji_school_editor_data', JSON.stringify(bundle.editorData));
+                        restoreEditorData(bundle.editorData);
+                    }
+
+                    calculateScore();
+                    showToast("已成功載入自評紀錄！");
+                } catch(err) {
+                    alert("檔案格式錯誤或讀取失敗。");
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function triggerReset() {
+            document.getElementById('resetModal').classList.remove('hidden');
+            document.getElementById('resetModal').classList.add('flex');
+        }
+
+        function confirmReset() {
+            document.getElementById('calcForm').reset();
+            localStorage.removeItem('tanji_school_score_data');
+            localStorage.removeItem('tanji_school_editor_data');
+            document.getElementById('resultArea').classList.add('hidden');
+            document.getElementById('resetModal').classList.add('hidden');
+            document.getElementById('resetModal').classList.remove('flex');
+            
+            document.querySelectorAll(".editor-textarea").forEach(tx => tx.value = "");
+            document.querySelectorAll(".editor-checklist-item").forEach(cb => cb.checked = false);
+            document.querySelectorAll(".editor-files-container").forEach(cont => cont.innerHTML = "");
+            document.querySelectorAll(".state-selector").forEach(sel => sel.value = "exist");
+            
+            calculateScore();
+            showToast("已清空所有設定數據與照片");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        let images = [];
+        let currentImageIndex = 0;
+        let scale = 1;
+        let isDragging = false;
+        let startX, startY;
+        let translateX = 0, translateY = 0;
+
+        function toggleCompareMode() {
+            document.body.classList.toggle('compare-mode');
+            if (document.body.classList.contains('compare-mode')) {
+                setTimeout(() => {
+                    document.getElementById('assessment').scrollIntoView({ behavior: 'smooth' });
+                }, 300);
+            }
+        }
+
+        function handleImageUpload(input) {
+            const files = input.files;
+            if (!files.length) return;
+            for (let i = 0; i < files.length; i++) {
+                const url = URL.createObjectURL(files[i]);
+                images.push(url);
+                addToSidebarGallery(url);
+            }
+            if (images.length === files.length) {
+                currentImageIndex = 0;
+                renderImage();
+            } 
+            input.value = '';
+        }
+
+        function addToSidebarGallery(url) {
+            const div = document.createElement('div');
+            div.className = 'bg-slate-800 p-2 rounded-lg relative group mb-4 border border-slate-700 cursor-pointer hover:border-emerald-500 transition';
+            div.innerHTML = `<img src="${url}" class="w-full h-32 object-cover rounded draggable-source cursor-grab hover:opacity-90 transition" draggable="true" ondragstart="drag(event)">`;
+            div.onclick = () => selectSidebarImage(url);
+            document.getElementById('sidebarGallery').prepend(div);
+        }
+
+        function renderImage() {
+            const imgEl = document.getElementById('currentImage');
+            const emptyState = document.getElementById('emptyState');
+            if (images.length > 0) {
+                imgEl.src = images[currentImageIndex];
+                imgEl.classList.remove('hidden');
+                imgEl.style.display = 'block'; 
+                emptyState.classList.add('hidden');
+                resetZoom(); 
+            }
+        }
+
+        function adjustZoom(delta) {
+            scale += delta;
+            if (scale < 0.1) scale = 0.1;
+            applyTransform();
+        }
+
+        function resetZoom() {
+            scale = 1; translateX = 0; translateY = 0;
+            applyTransform();
+        }
+
+        function zoomImage(event) {
+            event.preventDefault();
+            const delta = event.deltaY > 0 ? -0.1 : 0.1;
+            adjustZoom(delta);
+        }
+
+        function startDrag(e) {
+            e.preventDefault(); 
+            if (images.length === 0) return;
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            document.getElementById('imageViewer').style.cursor = 'grabbing';
+        }
+
+        function dragImage(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            applyTransform();
+        }
+
+        function endDrag() {
+            isDragging = false;
+            document.getElementById('imageViewer').style.cursor = 'grab';
+        }
+
+        function applyTransform() {
+            const img = document.getElementById('currentImage');
+            if (img) {
+                img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+                const zoomText = document.getElementById('zoomDisplay');
+                if (zoomText) zoomText.innerText = Math.round(scale * 100) + '%';
+            }
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.src);
+            ev.dataTransfer.effectAllowed = "copy";
+        }
+
+        function selectSidebarImage(url) {
+            const imgEl = document.getElementById('currentImage');
+            const emptyState = document.getElementById('emptyState');
+            imgEl.src = url;
+            imgEl.classList.remove('hidden');
+            imgEl.style.display = 'block'; 
+            emptyState.classList.add('hidden');
+            const idx = images.indexOf(url);
+            if (idx !== -1) currentImageIndex = idx;
+            resetZoom();
+        }
+
+        function buildStep1Form() {
+            const container = document.getElementById("selfAssessmentPanels");
+            let html = "";
+            indicatorsData.forEach((cat, catIndex) => {
+                const colors = {
+                    emerald: { bg: "bg-emerald-500", border: "border-emerald-100", title: "text-emerald-800" },
+                    amber: { bg: "bg-amber-500", border: "border-amber-100", title: "text-amber-800" },
+                    sky: { bg: "bg-sky-500", border: "border-sky-100", title: "text-sky-800" },
+                    violet: { bg: "bg-violet-500", border: "border-violet-100", title: "text-violet-800" },
+                    orange: { bg: "bg-orange-500", border: "border-orange-100", title: "text-orange-800" },
+                    rose: { bg: "bg-rose-500", border: "border-rose-100", title: "text-rose-800" },
+                    slate: { bg: "bg-slate-500", border: "border-slate-100", title: "text-slate-800" }
+                };
+                const col = colors[cat.color] || colors.emerald;
+                html += `
+                <details class="bg-white rounded-2xl shadow-sm border ${col.border} hover:shadow-md transition-shadow group/details overflow-hidden mb-6" ${catIndex <= 1 ? "open" : ""}>
+                    <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-md font-bold text-lg ${col.bg}">${cat.id.replace("cat","")}</div>
+                            <h3 class="text-2xl font-bold ${col.title}">${cat.title}</h3>
+                        </div>
+                        <svg class="w-6 h-6 triangle-icon text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-0 space-y-6">
+                        <div class="border-t border-slate-100 pt-4 space-y-4">
+                `;
+
+                cat.items.forEach(item => {
+                    html += `
+                    <div class="border-b border-slate-50 pb-4">
+                        <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider mb-2">${item.name}</h4>
+                        <div class="grid grid-cols-1 gap-2">
+                    `;
+
+                    if (item.type === "checkbox") {
+                        html += `
+                        <label class="option-card group-${cat.color}">
+                            <input type="checkbox" id="cb_${item.id.replace(/-/g, '_')}" value="${item.score}" class="sr-only-input" onchange="calculateScore()">
+                            <div class="card-content">
+                                <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+                                <div class="flex-1 min-w-0 flex items-start justify-between">
+                                    <span class="text-label">${item.desc}</span>
+                                    <span class="score-tag">${item.score}分</span>
+                                </div>
+                            </div>
+                        </label>
+                        `;
+                    } else if (item.type === "radio") {
+                        item.options.forEach(opt => {
+                            html += `
+                            <label class="option-card group-${cat.color}">
+                                <input type="radio" name="${item.groupName}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
+                                <div class="card-content">
+                                    <div class="radio-box"><div class="radio-dot"></div></div>
+                                    <div class="flex-1 min-w-0 flex items-start justify-between">
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分</span>
+                                    </div>
+                                </div>
+                            </label>
+                            `;
+                        });
+                    } else if (item.type === "checkbox_multi") {
+                        item.options.forEach(opt => {
+                            const bonusAttr = opt.isBonus ? 'data-is-bonus="true"' : '';
+                            html += `
+                            <label class="option-card group-${cat.color}">
+                                <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" ${bonusAttr} class="sr-only-input" onchange="calculateScore()">
+                                <div class="card-content">
+                                    <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+                                    <div class="flex-1 min-w-0 flex items-start justify-between">
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分${opt.isBonus ? " (加分)" : ""}</span>
+                                    </div>
+                                </div>
+                            </label>
+                            `;
+                        });
+                    } else if (item.type === "radio_and_check") {
+                        html += `<div class="bg-slate-50/50 p-3 rounded-xl border border-slate-100 flex flex-col gap-2 w-full min-w-0">`;
+                        item.options.forEach(opt => {
+                            html += `
+                            <label class="option-card group-${cat.color}">
+                                <input type="radio" name="${item.groupName}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
+                                <div class="card-content">
+                                    <div class="radio-box"><div class="radio-dot"></div></div>
+                                    <div class="flex-grow flex items-start justify-between min-w-0 flex-1">
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分</span>
+                                    </div>
+                                </div>
+                            </label>
+                            `;
+                        });
+                        html += `<div class="pt-2 border-t border-dashed border-slate-200 flex flex-col gap-2 w-full min-w-0">`;
+                        item.extras.forEach(opt => {
+                            html += `
+                            <label class="option-card group-${cat.color}">
+                                <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" data-is-bonus="true" class="sr-only-input" onchange="calculateScore()">
+                                <div class="card-content">
+                                    <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+                                    <div class="flex-grow flex items-start justify-between min-w-0 flex-1">
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分 (加分)</span>
+                                    </div>
+                                </div>
+                            </label>
+                            `;
+                        });
+                        html += `</div></div>`;
+                    } else if (item.type === "checkbox_multi_with_radio") {
+                        html += `<div class="bg-slate-50/50 p-3 rounded-xl border border-slate-100 flex flex-col gap-2 w-full min-w-0">`;
+                        item.checkboxes.forEach(opt => {
+                            html += `
+                            <label class="option-card group-${cat.color}">
+                                <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" class="sr-only-input" onchange="calculateScore()">
+                                <div class="card-content">
+                                    <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+                                    <div class="flex-1 min-w-0 flex items-start justify-between">
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分</span>
+                                    </div>
+                                </div>
+                            </label>
+                            `;
+                        });
+                        html += `<div class="pt-2 border-t border-dashed border-slate-200 flex flex-col gap-2 w-full min-w-0">`;
+                        item.radioOptions.forEach(opt => {
+                            html += `
+                            <label class="option-card group-${cat.color}">
+                                <input type="radio" name="${item.radioGroup}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
+                                <div class="card-content">
+                                    <div class="radio-box"><div class="radio-dot"></div></div>
+                                    <div class="flex-1 min-w-0 flex items-start justify-between">
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分</span>
+                                    </div>
+                                </div>
+                            </label>
+                            `;
+                        });
+                        html += `</div>`;
+                        if (item.radioGroup2) {
+                            html += `<div class="pt-2 border-t border-dashed border-slate-200 flex flex-col gap-2 w-full min-w-0">`;
+                            item.radioOptions2.forEach(opt => {
+                                html += `
+                                <label class="option-card group-${cat.color}">
+                                    <input type="radio" name="${item.radioGroup2}" value="${opt.score}" class="sr-only-input" onclick="toggleRadio(this)">
+                                    <div class="card-content">
+                                        <div class="radio-box"><div class="radio-dot"></div></div>
+                                        <div class="flex-1 min-w-0 flex items-start justify-between">
+                                            <span class="text-label">${opt.label}</span>
+                                            <span class="score-tag">${opt.score}分</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                `;
+                            });
+                            html += `</div>`;
+                        }
+                        html += `</div>`;
+                    } else if (item.type === "checkbox_multi_neutral") {
+                        html += `<div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-4">`;
+                        item.options.forEach(opt => {
+                            html += `
+                            <label class="option-card group-${cat.color}">
+                                <input type="checkbox" id="cb_${opt.id}" value="${opt.score}" class="sr-only-input" onchange="calculateScore()">
+                                <div class="card-content">
+                                    <div class="checkbox-box"><svg class="checkbox-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></div>
+                                    <div class="flex-1 min-w-0 flex items-start justify-between">
+                                        <span class="text-label">${opt.label}</span>
+                                        <span class="score-tag">${opt.score}分</span>
+                                    </div>
+                                </div>
+                            </label>
+                            `;
+                        });
+                        html += `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-200">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">本校太陽能發電 (度)</label>
+                                <input type="number" id="input_c_solar" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">喬木總面積 (m²)</label>
+                                <input type="number" id="input_c_tree" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">灌木總面積 (m²)</label>
+                                <input type="number" id="input_c_shrub" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">草花總面積 (m²)</label>
+                                <input type="number" id="input_c_flower" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                            <div class="bg-slate-100 p-2 rounded">校園總排放: <span id="dash_emission" class="font-bold text-slate-700">0</span> kg</div>
+                            <div class="bg-emerald-50 p-2 rounded text-emerald-800">創能固碳總量: <span id="val_sequestration" class="font-bold text-emerald-700">0</span> kg</div>
+                            <div id="carbon_result_box" class="p-2 rounded text-center"><span id="carbon_gap_label">狀態: </span> <span id="carbon_gap_val" class="font-bold">--</span></div>
+                        </div>
+                        </div>
+                        `;
+                    }
+
+                    html += `
+                        </div>
+                    </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                </details>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function initEditor() {
+            const container = document.getElementById("editorContainer");
+            let html = "";
+            
+            indicatorsData.forEach((cat, catIndex) => {
+                const colors = {
+                    emerald: "bg-emerald-500 border-emerald-100",
+                    amber: "bg-amber-400 border-amber-100",
+                    sky: "bg-sky-500 border-sky-100",
+                    violet: "bg-violet-500 border-violet-100",
+                    orange: "bg-orange-500 border-orange-100",
+                    rose: "bg-rose-500 border-rose-100",
+                    slate: "bg-slate-500 border-slate-100"
+                };
+                const bgTitle = colors[cat.color] || "bg-emerald-500";
+                
+                html += `
+                <details class="bg-white rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow group/details overflow-hidden mb-6" ${catIndex === 0 ? "open" : ""}>
+                    <summary class="flex items-center justify-between p-4 cursor-pointer select-none bg-slate-50 border-b border-slate-100">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-sm font-bold text-sm ${bgTitle}">${catIndex + 1}</div>
+                            <h3 class="text-lg font-bold text-slate-700">${cat.title}</h3>
+                        </div>
+                        <svg class="w-5 h-5 text-slate-400 triangle-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    </summary>
+                    <div class="p-6 pt-6 space-y-6">
+                `;
+
+                cat.items.forEach(item => {
+                    let specializedFields = "";
+                    if (item.id === "2-2-1") {
+                        specializedFields = `
+                        <div class="mb-4 p-3 bg-amber-50/50 rounded-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-amber-700 mb-1">申報台電電號 (11碼)</label>
+                                <input type="text" id="special_field_elec_id" class="w-full text-sm rounded border-amber-200" placeholder="例：00-1234-5678-9" onchange="saveEditorLocal()">
+                            </div>
+                        </div>
+                        `;
+                    } else if (item.id === "2-2-2") {
+                        specializedFields = `
+                        <div class="mb-4 p-3 bg-amber-50/50 rounded-xl border border-amber-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-amber-700 mb-1">申報自來水水號</label>
+                                <input type="text" id="special_field_water_id" class="w-full text-sm rounded border-amber-200" placeholder="例：12-345678-9" onchange="saveEditorLocal()">
+                            </div>
+                        </div>
+                        `;
+                    }
+
+                    let requirementsList = "";
+                    if (item.requirements) {
+                        requirementsList += `<div class="mb-4"><span class="text-xs font-bold text-slate-400 block mb-2 uppercase tracking-wider">📋 官方佐證核對勾選項目</span><div class="grid grid-cols-1 md:grid-cols-2 gap-2">`;
+                        item.requirements.forEach((req, rIdx) => {
+                            requirementsList += `
+                            <label class="flex items-start p-2 rounded-lg bg-slate-50 border border-slate-100 cursor-pointer select-none text-xs">
+                                <input type="checkbox" id="req_${item.id.replace(/-/g, '_')}_${rIdx}" class="mr-2 mt-0.5 text-emerald-600 focus:ring-emerald-500 rounded editor-checklist-item" onchange="saveEditorLocal()">
+                                <span class="text-slate-600">${req}</span>
+                            </label>
+                            `;
+                        });
+                        requirementsList += `</div></div>`;
+                    }
+
+                    let calculationStatusBadge = "";
+                    if (item.calcType) {
+                        calculationStatusBadge = `<span id="editor_badge_${item.id}" class="ml-2 px-2 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 rounded"></span>`;
+                    }
+
+                    html += `
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden item-card" data-cat-id="${cat.id}" data-item-id="${item.id}" data-item-name="${item.name}">
+                        <div class="bg-slate-50 p-3 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                            <div class="flex items-center flex-wrap gap-1">
+                                <h4 class="font-bold text-slate-700 text-base">${item.name}</h4>
+                                ${calculationStatusBadge}
+                            </div>
+                            <select onchange="changeState(this)" class="state-selector bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-1.5">
+                                <option value="exist" selected>🟢 已有成果</option>
+                                <option value="plan">🔵 擬改造</option>
+                                <option value="none">⚪ 不適合</option>
+                            </select>
+                        </div>
+                        <div class="p-4 content-area">
+                            ${specializedFields}
+                            ${requirementsList}
+                            
+                            <div class="mb-4">
+                                <span class="text-xs font-bold text-slate-400 block mb-2 uppercase tracking-wider">📁 實體佐證備份檔案 (拖曳或點選上傳)</span>
+                                <div class="drop-zone flex items-center justify-center border-2 border-dashed border-slate-200 rounded-xl p-6 bg-slate-50/50 cursor-pointer text-center relative"
+                                     ondragover="allowDrop(event)" ondragleave="leaveDrop(event)" ondrop="drop(event, '${item.id}')" onclick="triggerFileInput(this)">
+                                    <input type="file" multiple class="hidden" accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/zip" onchange="handleDirectUpload(this, '${item.id}')">
+                                    <div class="pointer-events-none">
+                                        <span class="text-xs text-slate-500 block">可拖曳多張照片/公文PDF或壓縮包至此處</span>
+                                        <span class="text-[10px] text-slate-400 block mt-1">(上傳後直接列於下方作為附件檔案)</span>
+                                    </div>
+                                </div>
+                                <div id="files_container_${item.id}" class="editor-files-container mt-2 flex flex-wrap gap-2"></div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1 description-label">自評具體內容描述 (必填)</label>
+                                <textarea class="editor-textarea w-full border-slate-300 rounded-lg p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500 shadow-sm" rows="3" placeholder="請詳細說明，此內容與檔案名稱將會一併匯出至 Word 申請書中..." onchange="saveEditorLocal()"></textarea>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                html += `</div></details>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function triggerFileInput(div) {
+            if (event.target.closest('button')) return;
+            const input = div.querySelector('input[type="file"]');
+            input.click();
+        }
+
+        function handleDirectUpload(input, itemId) {
+            const files = input.files;
+            if (!files.length) return;
+            for (let i = 0; i < files.length; i++) {
+                addFileToContainer(itemId, files[i].name);
+            }
+            input.value = '';
+            saveEditorLocal();
+        }
+
+        function drop(ev, itemId) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const src = ev.dataTransfer.getData("text");
+            if (src) {
+                let filename = "拖曳導入照片_" + new Date().getTime().toString().slice(-4) + ".jpg";
+                addFileToContainer(itemId, filename);
+                saveEditorLocal();
+            }
+        }
+
+        function addFileToContainer(itemId, name) {
+            const container = document.getElementById(`files_container_${itemId}`);
+            if (!container) return;
+            const div = document.createElement('div');
+            div.className = "flex items-center bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-3 py-1.5 rounded-lg font-medium select-none";
+            div.innerHTML = `
+                <span class="mr-1.5">📄</span>
+                <span class="file-name text-slate-700 font-mono">${name}</span>
+                <button onclick="event.stopPropagation(); this.parentElement.remove(); saveEditorLocal();" class="ml-2 text-rose-500 hover:text-rose-700 font-bold text-sm">×</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function changeState(select) {
+            const card = select.closest('.item-card');
+            const state = select.value;
+            const label = card.querySelector('.description-label');
+            if (state === 'exist') {
+                label.innerText = '自評具體內容描述 (已有成果，必填)';
+                label.classList.remove('text-blue-600', 'text-red-600');
+            } else if (state === 'plan') {
+                label.innerText = '擬改造內容與實施規畫描述 (必填)';
+                label.classList.remove('text-red-600');
+                label.classList.add('text-blue-600');
+            } else {
+                label.innerText = '不適用說明 (請詳述不適用原因)';
+                label.classList.remove('text-blue-600');
+                label.classList.add('text-red-600');
+            }
+            saveEditorLocal();
+        }
+
+        function saveEditorLocal() {
+            const dataBundle = { inputs: {}, checklists: {}, selectStates: {}, descriptions: {}, filenames: {} };
+            const elec_id_el = document.getElementById("special_field_elec_id");
+            const water_id_el = document.getElementById("special_field_water_id");
+            if (elec_id_el) dataBundle.inputs.elec_id = elec_id_el.value;
+            if (water_id_el) dataBundle.inputs.water_id = water_id_el.value;
+
+            document.querySelectorAll(".editor-checklist-item").forEach(cb => {
+                dataBundle.checklists[cb.id] = cb.checked;
+            });
+
+            document.querySelectorAll(".item-card").forEach(card => {
+                const itemId = card.dataset.itemId;
+                const sel = card.querySelector(".state-selector");
+                const tx = card.querySelector(".editor-textarea");
+                const fileContainer = document.getElementById(`files_container_${itemId}`);
+                
+                if (sel) dataBundle.selectStates[itemId] = sel.value;
+                if (tx) dataBundle.descriptions[itemId] = tx.value;
+                
+                if (fileContainer) {
+                    const fNames = Array.from(fileContainer.querySelectorAll(".file-name")).map(span => span.innerText);
+                    dataBundle.filenames[itemId] = fNames;
+                }
+            });
+
+            localStorage.setItem('tanji_school_editor_data', JSON.stringify(dataBundle));
+        }
+
+        function restoreEditorData(data) {
+            if (!data) return;
+            const elec_id_el = document.getElementById("special_field_elec_id");
+            const water_id_el = document.getElementById("special_field_water_id");
+            if (elec_id_el && data.inputs?.elec_id) elec_id_el.value = data.inputs.elec_id;
+            if (water_id_el && data.inputs?.water_id) water_id_el.value = data.inputs.water_id;
+
+            if (data.checklists) {
+                for (const [id, checked] of Object.entries(data.checklists)) {
+                    const cb = document.getElementById(id);
+                    if (cb) cb.checked = checked;
+                }
+            }
+
+            document.querySelectorAll(".item-card").forEach(card => {
+                const itemId = card.dataset.itemId;
+                const sel = card.querySelector(".state-selector");
+                const tx = card.querySelector(".editor-textarea");
+                const fileContainer = document.getElementById(`files_container_${itemId}`);
+
+                if (sel && data.selectStates?.[itemId]) {
+                    sel.value = data.selectStates[itemId];
+                    changeState(sel);
+                }
+                if (tx && data.descriptions?.[itemId]) {
+                    tx.value = data.descriptions[itemId];
+                }
+                if (fileContainer && data.filenames?.[itemId]) {
+                    fileContainer.innerHTML = "";
+                    data.filenames[itemId].forEach(name => {
+                        addFileToContainer(itemId, name);
+                    });
+                }
+            });
+        }
+
+        function splitForVertical(str) {
+            const parts = [];
+            let remaining = str;
+            const matchStart = remaining.match(/^(\d+-\d+(-\d+)?\.?\s*)/);
+            if (matchStart) {
+                parts.push(matchStart[1].trim());
+                remaining = remaining.substring(matchStart[0].length);
+            }
+            return [parts[0] || "", remaining];
+        }
+
+        function generateWord() {
+            const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, VerticalAlign, AlignmentType, BorderStyle, TableLayoutType } = docx;
+            const rows = [];
+            const createTightP = (text, options = {}) => {
+                return new Paragraph({
+                    text: text,
+                    alignment: options.align || AlignmentType.CENTER,
+                    bold: options.bold || false,
+                    color: options.color || "000000",
+                    size: options.size || 20,
+                    spacing: { before: 40, after: 40, line: 240 },
+                    indent: { left: 0, right: 0 }
+                });
+            };
+            const tightCellMargins = { top: 60, bottom: 60, left: 100, right: 100 };
+
+            rows.push(new TableRow({
+                children: [
+                    new TableCell({ children: [createTightP("項目代碼", { bold: true })], width: { size: 10, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
+                    new TableCell({ children: [createTightP("指標自評內容與官方要求要件", { bold: true })], width: { size: 30, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
+                    new TableCell({ children: [createTightP("申報佐證檔案與附件清冊", { bold: true })], width: { size: 30, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
+                    new TableCell({ children: [createTightP("具體現況說明 / 改造規劃 / 不適合原因", { bold: true })], width: { size: 30, type: WidthType.PERCENTAGE }, verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins })
+                ]
+            }));
+
+            const cards = document.querySelectorAll(".item-card");
+            cards.forEach(card => {
+                const itemId = card.dataset.itemId;
+                const itemName = card.dataset.itemName;
+                const [idText, nameText] = splitForVertical(itemName);
+                const state = card.querySelector(".state-selector").value;
+                const descText = card.querySelector(".editor-textarea").value;
+
+                let stateLabel = "";
+                if (state === "exist") stateLabel = "【🟢 已有成果】";
+                else if (state === "plan") stateLabel = "【🔵 擬改造】";
+                else stateLabel = "【⚪ 不適合】";
+
+                const checklistItems = [];
+                card.querySelectorAll(".editor-checklist-item").forEach(cb => {
+                    const labelSpan = cb.nextElementSibling;
+                    const bullet = cb.checked ? "■" : "□";
+                    checklistItems.push(`${bullet} ${labelSpan ? labelSpan.innerText : ""}`);
+                });
+
+                const fileNames = [];
+                const fileContainer = document.getElementById(`files_container_${itemId}`);
+                if (fileContainer) {
+                    fileContainer.querySelectorAll(".file-name").forEach(span => {
+                        fileNames.push("📄 " + span.innerText);
+                    });
+                }
+
+                let syncBadgeVal = "";
+                const badge = document.getElementById(`editor_badge_${itemId}`);
+                if (badge && badge.innerText) {
+                    syncBadgeVal = "（系統數值同步：" + badge.innerText + "）";
+                }
+
+                const indicatorDescP = [];
+                indicatorDescP.push(createTightP(nameText, { bold: true, align: AlignmentType.LEFT }));
+                if (syncBadgeVal) {
+                    indicatorDescP.push(createTightP(syncBadgeVal, { color: "059669", align: AlignmentType.LEFT }));
+                }
+                if (checklistItems.length > 0) {
+                    indicatorDescP.push(createTightP("\n核對要件：", { bold: true, align: AlignmentType.LEFT }));
+                    checklistItems.forEach(item => {
+                        indicatorDescP.push(createTightP(item, { align: AlignmentType.LEFT, size: 16 }));
+                    });
+                }
+
+                const attachmentP = [];
+                if (itemId === "2-2-1") {
+                    const elecId = document.getElementById("special_field_elec_id")?.value;
+                    if (elecId) attachmentP.push(createTightP("⚡ 申報台電電號：" + elecId, { bold: true, align: AlignmentType.LEFT }));
+                } else if (itemId === "2-2-2") {
+                    const waterId = document.getElementById("special_field_water_id")?.value;
+                    if (waterId) attachmentP.push(createTightP("💧 申報自來水水號：" + waterId, { bold: true, align: AlignmentType.LEFT }));
+                }
+
+                attachmentP.push(createTightP(`狀態：${stateLabel}`, { align: AlignmentType.LEFT, bold: true }));
+                if (fileNames.length > 0) {
+                    attachmentP.push(createTightP("\n已備便佐證檔案：", { bold: true, align: AlignmentType.LEFT }));
+                    fileNames.forEach(fn => {
+                        attachmentP.push(createTightP(fn, { align: AlignmentType.LEFT, size: 16 }));
+                    });
+                } else {
+                    attachmentP.push(createTightP("\n（暫無佐證檔案）", { align: AlignmentType.LEFT, color: "888888" }));
+                }
+
+                const explanationP = [];
+                if (descText.trim()) {
+                    descText.split("\n").forEach(line => {
+                        explanationP.push(createTightP(line, { align: AlignmentType.LEFT }));
+                    });
+                } else {
+                    explanationP.push(createTightP("本校於此項目已有具體低碳作為，資料皆如上欄勾選與附件所示。", { align: AlignmentType.LEFT }));
+                }
+
+                rows.push(new TableRow({
+                    children: [
+                        new TableCell({ children: [createTightP(idText, { bold: true })], verticalAlign: VerticalAlign.CENTER, margins: tightCellMargins }),
+                        new TableCell({ children: indicatorDescP, margins: tightCellMargins }),
+                        new TableCell({ children: attachmentP, margins: tightCellMargins }),
+                        new TableCell({ children: explanationP, margins: tightCellMargins })
+                    ]
+                }));
+            });
+
+            const scoreVal = document.getElementById("totalScore").innerText;
+            const levelVal = document.getElementById("badgeLevel").innerText;
+
+            const doc = new Document({
+                sections: [{
+                    properties: { page: { margin: { top: 1200, right: 1200, bottom: 1200, left: 1200 } } },
+                    children: [
+                        createTightP("新北市低碳校園自評指標現況佐證表", { size: 36, bold: true, align: AlignmentType.CENTER }),
+                        createTightP(`本校預估自評總得分：${scoreVal} 分 (落點估算為：${levelVal})`, { size: 24, bold: true, align: AlignmentType.CENTER }),
+                        createTightP("本表格式完全參照新北市低碳校園自評與佐證格式生成，佐證檔案已依欄位進行相應配給並列於下方。\n", { align: AlignmentType.CENTER, size: 16, color: "555555" }),
+                        new Table({
+                            layout: TableLayoutType.FIXED,
+                            width: { size: 100, type: WidthType.PERCENTAGE },
+                            margins: tightCellMargins,
+                            rows: rows
+                        }),
+                        createTightP("\n\n填表人：               處室主管：               校長：", { align: AlignmentType.RIGHT, bold: true, size: 22 })
+                    ]
+                }]
+            });
+
+            Packer.toBlob(doc).then(blob => {
+                saveAs(blob, `低碳校園現況佐證表_${new Date().toISOString().slice(0, 10)}.docx`);
+            });
+        }
+
+        window.onload = function() {
+            buildStep1Form();
+            initEditor();
+
+            const saved = localStorage.getItem('tanji_school_score_data');
+            const saved_editor = localStorage.getItem('tanji_school_editor_data');
+            
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.getElementById('schoolType').value = data.schoolType || 'elementary';
+                    document.getElementById('totalPeople').value = data.people || '';
+                    document.getElementById('totalFloorArea').value = data.floorArea || '';
+                    document.getElementById('emptyArea').value = data.emptyArea || '';
+                    document.getElementById('roofArea').value = data.roofArea || '';
+                    document.getElementById('annualElec').value = data.elec || '';
+                    document.getElementById('annualWater').value = data.water || '';
+                    document.getElementById('annualFuel').value = data.fuel || '';
+
+                    if (document.getElementById('input_c_solar')) {
+                        document.getElementById('input_c_solar').value = data.c_solar || '';
+                        document.getElementById('input_c_tree').value = data.c_tree || '';
+                        document.getElementById('input_c_shrub').value = data.c_shrub || '';
+                        document.getElementById('input_c_flower').value = data.c_flower || '';
+                    }
+
+                    const formCheckboxes = Array.from(document.querySelectorAll('#calcForm input[type="checkbox"]'));
+                    if (data.checkboxStates) {
+                        data.checkboxStates.forEach((val, idx) => {
+                            if (formCheckboxes[idx]) formCheckboxes[idx].checked = val;
+                        });
+                    }
+
+                    if (data.radioStates) {
+                        for (const [name, val] of Object.entries(data.radioStates)) {
+                            const rb = document.querySelector(`input[name="${name}"][value="${val}"]`);
+                            if (rb) rb.checked = true;
+                        }
+                    }
+
+                    if (data.waterRecycleRateSel) {
+                        const rbWater = document.querySelector(`input[name="water_recycle_rate"][value="${data.waterRecycleRateSel}"]`);
+                        if (rbWater) rbWater.checked = true;
+                    }
+                } catch(e) {}
+            }
+
+            if (saved_editor) {
+                try {
+                    restoreEditorData(JSON.parse(saved_editor));
+                } catch(e) {}
+            }
+
+            calculateScore();
+        }
+    </script>
+</body>
+</html>
