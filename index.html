@@ -124,7 +124,7 @@
         .group-slate input:checked + .card-content .score-tag { background-color: #e2e8f0; color: #0f172a; }
         
         .option-card {
-            @apply relative flex items-start p-3 rounded-xl border border-slate-200 cursor-pointer transition-all duration-150 bg-white select-none h-full min-w-0 w-full;
+            @apply relative flex items-start p-3 rounded-xl border border-slate-200 cursor-pointer transition-all duration-150 bg-white select-none h-full min-w-0 w-full overflow-hidden;
         }
         .card-content {
             @apply flex items-start w-full min-w-0;
@@ -136,7 +136,7 @@
         .checkbox-icon { @apply w-3.5 h-3.5; }
         .radio-dot { @apply w-2.5 h-2.5 rounded-full; }
         .text-label {
-            @apply text-slate-600 text-sm md:text-base leading-snug transition-colors flex-1 min-w-0 break-words pr-1 text-left;
+            @apply text-slate-600 text-sm md:text-base leading-snug transition-colors flex-1 min-w-0 break-all pr-1 text-left;
         }
         .score-tag {
             @apply ml-2 text-xs font-bold px-2 py-1 rounded bg-slate-100 text-slate-500 whitespace-nowrap shrink-0 mt-0.5;
@@ -329,16 +329,16 @@
                     </button>
                 </div>
 
-                <form id="calcForm" class="space-y-12">
+                <form id="calcForm" class="space-y-12 w-full max-w-full min-w-0">
                     <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
                         <div class="bg-slate-50 px-8 py-4 border-b border-slate-200 flex items-center">
                             <svg class="w-5 h-5 text-slate-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                             <h3 class="text-lg font-bold text-slate-700">學校基礎屬性與數據</h3>
                         </div>
-                        <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">學校層級 (基準判定)</label>
-                                <select id="schoolType" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-base" onchange="calculateScore()">
+                                <select id="schoolType" class="w-full rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-base" onchange="calculateScore()">
                                     <option value="elementary">國小 (用水基準: 28L/人日)</option>
                                     <option value="junior">國中 (用水基準: 25L/人日)</option>
                                     <option value="high">高中職 (用水基準: 32L/人日)</option>
@@ -348,56 +348,56 @@
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">教職員生總人數</label>
                                 <div class="relative group">
-                                    <input type="number" id="totalPeople" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：1200" onchange="calculateScore()">
+                                    <input type="number" id="totalPeople" class="w-full rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-lg" placeholder="例：1200" onchange="calculateScore()">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-medium">人</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">總樓地板面積</label>
                                 <div class="relative group">
-                                    <input type="number" id="totalFloorArea" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="用以計算EUI" onchange="calculateScore()">
+                                    <input type="number" id="totalFloorArea" class="w-full rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-lg" placeholder="用以計算EUI" onchange="calculateScore()">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-medium">m²</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">空地面積 (扣除跑道與球場)</label>
                                 <div class="relative group">
-                                    <input type="number" id="emptyArea" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="用以計算綠覆率" onchange="calculateScore()">
+                                    <input type="number" id="emptyArea" class="w-full rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-lg" placeholder="用以計算綠覆率" onchange="calculateScore()">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-medium">m²</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">可綠化屋頂總面積</label>
                                 <div class="relative group">
-                                    <input type="number" id="roofArea" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="綠屋頂佔比分母" onchange="calculateScore()">
+                                    <input type="number" id="roofArea" class="w-full rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-lg" placeholder="綠屋頂佔比分母" onchange="calculateScore()">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-medium">m²</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">113年用電總量</label>
                                 <div class="relative group">
-                                    <input type="number" id="annualElec" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：150000" onchange="calculateScore()">
+                                    <input type="number" id="annualElec" class="w-full rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-lg" placeholder="例：150000" onchange="calculateScore()">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-medium">度</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">113年用水總量</label>
                                 <div class="relative group">
-                                    <input type="number" id="annualWater" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：8000" onchange="calculateScore()">
+                                    <input type="number" id="annualWater" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-lg" placeholder="例：8000" onchange="calculateScore()">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-medium">度 (m³)</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-600 mb-2">公務車年用油量 (柴油為主)</label>
                                 <div class="relative group">
-                                    <input type="number" id="annualFuel" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 border transition text-lg" placeholder="例：1200" onchange="calculateScore()">
+                                    <input type="number" id="annualFuel" class="w-full rounded-xl border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none py-3 px-4 transition text-lg" placeholder="例：1200" onchange="calculateScore()">
                                     <span class="absolute right-4 top-3.5 text-slate-400 font-medium">公升 (L)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div id="selfAssessmentPanels" class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                    <div id="selfAssessmentPanels" class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start w-full max-w-full min-w-0">
                     </div>
 
                     <div id="resultArea" class="hidden bg-white rounded-3xl shadow-xl overflow-hidden border border-emerald-100 relative">
@@ -405,7 +405,7 @@
                             <h3 class="text-2xl font-bold text-white tracking-wide">碳吉校園自評診斷報告</h3>
                         </div>
                         <div class="p-8 md:p-10">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-100">
                                 <div class="py-4">
                                     <p class="text-slate-400 font-bold text-sm uppercase tracking-wider mb-2">預估自評總得分</p>
                                     <p id="totalScore" class="text-6xl font-black text-emerald-600">0</p>
@@ -724,7 +724,7 @@
                             { id: "3_2_c", label: "加分項目: 配合「垃圾處理隨袋徵收」使用專用垃圾袋", score: 2, isBonus: true },
                             { id: "3_2_extra_categories", label: "加分項目: 細分類達 3 類以上 (乾電池/光源/塑膠/紙/光碟等)", score: 1, isBonus: true }
                         ],
-                        requirements: ["資源回收資料庫後台或每月資源回收量統計表", "公共回收區標誌標示、專用垃圾袋使用狀況抽檢相片", "廢燈泡、乾電池、行動電話等特殊細分類貯存點相片"]
+                        requirements: ["資源回收資料庫後台 or 每月資源回收量統計表", "公共回收區標誌標示、專用垃圾袋使用狀況抽檢相片", "廢燈泡、乾電池、行動電話等特殊細分類貯存點相片"]
                     },
                     {
                         id: "3-3",
@@ -741,10 +741,10 @@
                         ],
                         radioGroup2: "food_compost",
                         radioOptions2: [
-                            { label: "推動廚餘再利用有計畫且肥料後續運用或與社區分享", score: 3 },
+                            { label: "推動廚餘再利用有計畫且肥料後續運用 or 與社區分享", score: 3 },
                             { label: "學校推動廚餘再利用，具體管理辦法與學生共同參與", score: 2 }
                         ],
-                        requirements: ["二手教科書、制服舊物交換日或常設回收交換站照片", "落葉堆肥堆置區管理計畫、學生動手翻堆施肥照片", "廚餘機、堆肥桶維運計畫及將有機肥料施於校內花圃照片"]
+                        requirements: ["二手教科書、制服舊物交換日 or 常設回收交換站照片", "落葉堆肥堆置區管理計畫、學生動手翻堆施肥照片", "廚餘機、堆肥桶維運計畫及將有機肥料施於校內花圃照片"]
                     }
                 ]
             },
@@ -763,9 +763,9 @@
                             { id: "4_1_b", label: "訂定走路上學日，鼓勵每週 1 日體驗並持續推動", score: 1 },
                             { id: "4_1_c", label: "鼓勵家長與社區人士踴躍加入交通導護志工行列", score: 1 },
                             { id: "4_1_d", label: "設有教師導護隊及學生糾察隊共同推動", score: 1 },
-                            { id: "4_1_e", label: "訂定走路上學獎勵辦法、競賽或文藝宣導活動", score: 1 }
+                            { id: "4_1_e", label: "訂定走路上學獎勵辦法、競賽 or 文藝宣導活動", score: 1 }
                         ],
-                        requirements: ["朝會宣導剪影或學校網站推廣綠色低碳通學照片", "每週一日走路上學實施成果、導護與糾察簽到紀錄", "走路上學集點卡、獎勵辦法 or 競賽文宣"]
+                        requirements: ["朝會宣導剪影 or 學校網站推廣綠色低碳通學照片", "每週一日走路上學實施成果、導護與糾察簽到紀錄", "走路上學集點卡、獎勵辦法 or 競賽文宣"]
                     },
                     {
                         id: "4-2",
@@ -788,7 +788,7 @@
                             { id: "4_3_b", label: "加分項目: 推動交通(接駁)車電動化", score: 1, isBonus: true },
                             { id: "4_3_c", label: "學校設置安全接送(駁)候車區", score: 1 }
                         ],
-                        requirements: ["校車/接駁車照片、安全接駁候車區實景與標示照片", "加分：電動公務交通接駁車行照或租賃合約證明"]
+                        requirements: ["校車/接駁車照片、安全接駁候車區實景與標示照片", "加分：電動公務交通接駁車行照 or 租賃合約證明"]
                     },
                     {
                         id: "4-4",
@@ -796,7 +796,7 @@
                         desc: "明確交通設施標示(1分)、無障礙通學步道(1分)與人車分道(1分)",
                         type: "checkbox_multi",
                         options: [
-                            { id: "4_4_a", label: "通學路口或校園內設有明確交通設施(反光鏡/標誌)", score: 1 },
+                            { id: "4_4_a", label: "通學路口 or 校園內設有明確交通設施(反光鏡/標誌)", score: 1 },
                             { id: "4_4_b", label: "建立或配合設置無障礙通學步道", score: 1 },
                             { id: "4_4_c", label: "校內積極推行人車分道(或校園全無車輛進入)", score: 1 }
                         ],
@@ -805,7 +805,7 @@
                     {
                         id: "4-5",
                         name: "4-5.低污染運具",
-                        desc: "購置或租用電動機車(2分)或自行車/大眾運輸公務使用(1分)",
+                        desc: "購置或租用電動機車(2分) or 自行車/大眾運輸公務使用(1分)",
                         type: "checkbox_multi",
                         options: [
                             { id: "4_5_a", label: "學校購置或租用電動機車作為公務聯繫替代之用", score: 2 },
@@ -850,7 +850,7 @@
                         desc: "訂有低碳校園管理政策或節能規約，特定宣導每年2次以上",
                         type: "checkbox",
                         score: 1,
-                        requirements: ["學校核定發布之節能減碳、低碳校園特定管理條約及規約公文", "每年2次以上辦理節能低碳講座或朝會實踐照片與文宣"]
+                        requirements: ["學校核定發布之節能減碳、低碳校園特定管理條約及規約公文", "每年2次以上辦理節能低碳講座 or 朝會實踐照片與文宣"]
                     },
                     {
                         id: "5-2",
@@ -898,7 +898,7 @@
                             { id: "5_5_b", label: "配合新北市政府推廣智慧節電政策或相關推廣活動", score: 2 },
                             { id: "5_5_c", label: "推動無毒、有機農園，利用頂樓或閒置土地種植蔬果作物", score: 3 }
                         ],
-                        requirements: ["零碳主題教學情境專區實景照片（如雨水回收模型等）", "智慧節電競賽參與 or 市府節電活動推廣紀錄照片", "學校閒置空地、陽台頂樓無毒或有機菜園種植剪影"]
+                        requirements: ["零碳主題教學情境專區實景照片（如雨水回收模型等）", "智慧節電競賽參與 or 市府節電活動推廣紀錄照片", "學校閒置空地、陽台頂樓無毒 or 有機菜園種植剪影"]
                     }
                 ]
             },
@@ -1007,7 +1007,7 @@
             let bonusScore = 0;
 
             document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
-                if (cb.name !== "indicators" && !cb.classList.contains("editor-checklist-item")) {
+                if (cb.name !== "indicators" && !cb.classList.contains("editor-checklist-item") && !cb.id.startsWith("cb_6_1_")) {
                     const s = parseInt(cb.value) || 0;
                     score += s;
                     if (cb.dataset.isBonus === "true") {
@@ -1073,22 +1073,24 @@
                 const cBox = document.getElementById("carbon_result_box");
                 const cLabel = document.getElementById("carbon_gap_label");
                 const cVal = document.getElementById("carbon_gap_val");
+                
                 if (diff <= 0 && carbonEmissions > 0) {
-                    cBox.className = "col-span-1 bg-emerald-100 p-2 rounded-lg border border-emerald-200 text-center flex flex-col justify-center sm:col-span-1";
+                    cBox.className = "p-3 rounded-xl flex justify-between items-center bg-emerald-100 border border-emerald-300 text-emerald-800 shadow-sm transition-all";
                     cLabel.innerText = "減碳狀態";
-                    cLabel.className = "text-xs font-bold text-emerald-600 mb-1";
+                    cLabel.className = "font-bold text-emerald-700";
                     cVal.innerText = "已達成碳中和！";
-                    cVal.className = "text-sm font-bold text-emerald-700";
+                    cVal.className = "text-sm font-bold text-emerald-800";
                 } else if (carbonEmissions > 0) {
-                    cBox.className = "col-span-1 bg-rose-50 p-2 rounded-lg border border-rose-100 text-center flex flex-col justify-center sm:col-span-1";
+                    cBox.className = "p-3 rounded-xl flex justify-between items-center bg-rose-50 border border-rose-200 text-rose-800 shadow-sm transition-all";
                     cLabel.innerText = "距離碳中和";
-                    cLabel.className = "text-xs font-bold text-rose-500 mb-1";
+                    cLabel.className = "font-bold text-rose-700";
                     cVal.innerText = "差 " + Math.round(diff).toLocaleString() + " kg";
-                    cVal.className = "text-sm font-bold text-rose-600";
+                    cVal.className = "text-sm font-bold text-rose-800";
                 } else {
-                    cBox.className = "col-span-1 bg-slate-50 p-2 rounded-lg border border-slate-200 text-center flex flex-col justify-center sm:col-span-1";
-                    cLabel.innerText = "碳中和計算";
-                    cVal.innerText = "請完成設定";
+                    cBox.className = "p-3 rounded-xl flex justify-between items-center bg-white border border-slate-200 shadow-sm transition-all";
+                    cLabel.innerText = "狀態";
+                    cLabel.className = "font-bold text-slate-600";
+                    cVal.innerText = "請完成上方輸入";
                     cVal.className = "text-sm font-bold text-slate-500";
                 }
             }
@@ -1586,7 +1588,7 @@
                         }
                         html += `</div>`;
                     } else if (item.type === "checkbox_multi_neutral") {
-                        html += `<div class="bg-slate-50/50 p-4 rounded-xl border border-slate-100 space-y-4">`;
+                        html += `<div class="bg-slate-50/50 p-4 rounded-xl border border-slate-200 flex flex-col gap-3 w-full min-w-0 shadow-sm">`;
                         item.options.forEach(opt => {
                             html += `
                             <label class="option-card group-${cat.color}">
@@ -1600,28 +1602,37 @@
                             `;
                         });
                         html += `
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-200">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 border-t border-slate-200 mt-1">
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 mb-1">本校太陽能發電 (度)</label>
-                                <input type="number" id="input_c_solar" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                                <input type="number" id="input_c_solar" class="w-full text-sm rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none px-3 py-2 transition bg-white" onchange="calculateScore()">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 mb-1">喬木總面積 (m²)</label>
-                                <input type="number" id="input_c_tree" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                                <input type="number" id="input_c_tree" class="w-full text-sm rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none px-3 py-2 transition bg-white" onchange="calculateScore()">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 mb-1">灌木總面積 (m²)</label>
-                                <input type="number" id="input_c_shrub" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                                <input type="number" id="input_c_shrub" class="w-full text-sm rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none px-3 py-2 transition bg-white" onchange="calculateScore()">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 mb-1">草花總面積 (m²)</label>
-                                <input type="number" id="input_c_flower" class="w-full text-xs rounded border-slate-300 py-1" onchange="calculateScore()">
+                                <input type="number" id="input_c_flower" class="w-full text-sm rounded-xl border border-slate-300 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none px-3 py-2 transition bg-white" onchange="calculateScore()">
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                            <div class="bg-slate-100 p-2 rounded">校園總排放: <span id="dash_emission" class="font-bold text-slate-700">0</span> kg</div>
-                            <div class="bg-emerald-50 p-2 rounded text-emerald-800">創能固碳總量: <span id="val_sequestration" class="font-bold text-emerald-700">0</span> kg</div>
-                            <div id="carbon_result_box" class="p-2 rounded text-center"><span id="carbon_gap_label">狀態: </span> <span id="carbon_gap_val" class="font-bold">--</span></div>
+                        <div class="flex flex-col gap-2.5 text-xs pt-3 border-t border-dashed border-slate-200">
+                            <div class="bg-slate-100/80 p-3 rounded-xl border border-slate-200 flex justify-between items-center shadow-sm">
+                                <span class="font-bold text-slate-600">校園總排放:</span>
+                                <span class="font-bold text-slate-800"><span id="dash_emission" class="text-sm">0</span> kgCO₂e</span>
+                            </div>
+                            <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-200 text-emerald-800 flex justify-between items-center shadow-sm">
+                                <span class="font-bold text-emerald-700">創能固碳總量:</span>
+                                <span class="font-bold text-emerald-800"><span id="val_sequestration" class="text-sm">0</span> kgCO₂e</span>
+                            </div>
+                            <div id="carbon_result_box" class="p-3 rounded-xl flex justify-between items-center border border-slate-200 bg-white shadow-sm transition-all">
+                                <span id="carbon_gap_label" class="font-bold text-slate-600">狀態:</span>
+                                <span id="carbon_gap_val" class="font-bold text-slate-500">請完成上方輸入</span>
+                            </div>
                         </div>
                         </div>
                         `;
@@ -1743,7 +1754,7 @@
 
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-1 description-label">自評具體內容描述 (必填)</label>
-                                <textarea class="editor-textarea w-full border-slate-300 rounded-lg p-2 text-sm focus:ring-emerald-500 focus:border-emerald-500 shadow-sm" rows="3" placeholder="請詳細說明，此內容與檔案名稱將會一併匯出至 Word 申請書中..." onchange="saveEditorLocal()"></textarea>
+                                <textarea class="editor-textarea w-full border-2 border-solid border-slate-300 rounded-xl p-3 text-sm focus:ring-2 focus:ring-emerald-100 focus:border-emerald-500 shadow-sm bg-white hover:border-slate-400 transition-colors" rows="3" placeholder="請詳細說明，此內容與檔案名稱將會一併匯出至 Word 申請書中..." onchange="saveEditorLocal()"></textarea>
                             </div>
                         </div>
                     </div>`;
