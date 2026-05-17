@@ -23,25 +23,25 @@ graph TD
     classDef data fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:black
 
     %% 1. 用戶端環境
-    subgraph Client_Zone [用戶端環境 - 前端展示與運算層]
+    subgraph Client_Zone ["用戶端環境 - 前端展示與運算層"]
         Browser[("使用者瀏覽器<br>HTML5 / Tailwind CSS")]:::client
         
         %% 業務邏輯層
-        subgraph Logic_Layer [核心運算模組 (Vanilla JS)]
+        subgraph Logic_Layer ["核心運算模組 (Vanilla JS)"]
             Score_Engine["標章計分與補助運算引擎"]:::logic
             Workspace["照片工作台<br>(Drag & Drop API)"]:::logic
             Docx_Engine["申請書生成引擎"]:::logic
         end
 
         %% 資料儲存層
-        subgraph Data_Layer [本地資料層]
+        subgraph Data_Layer ["本地資料層"]
             Local_Storage[("瀏覽器暫存<br>LocalStorage")]:::data
             JSON_IO[("JSON 匯入/匯出模組")]:::data
         end
     end
 
     %% 2. 外部依賴
-    subgraph External_Libs [外部函式庫 (CDN)]
+    subgraph External_Libs ["外部函式庫 (CDN)"]
         Tailwind[("Tailwind CSS")]:::external
         DocxJS[("Docx.js")]:::external
         FileSaver[("FileSaver.js")]:::external
